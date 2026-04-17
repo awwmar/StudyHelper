@@ -1,0 +1,47 @@
+# StudyHelper Git Ignore
+
+#.env should NEVER be uploaded
+.env
+
+# Environments
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs and Debug
+*.log
+test_logs.txt
+error.log
+debug.log
+llm.log
+vector.log
+verification.log
+
+# Temporary / OS files
+.DS_Store
+
+# Data / Vector Indices
+index.faiss*
+vector_db/
+uploads/
+
+# Large binaries / Test Data
+*.pdf
+vecteezy_*.png
+
+# Test results
+eval_full_results.json
+eval_report_output.txt
+eval_results.txt
+exam_output.txt
+hnsw_out.txt
+hnsw_out_utf8.txt
+hnsw_test_output.txt
+paper_output.txt
+paper_utf8.txt
+phase2_out.txt
+test_phase2_output.txt
+test_logs.txt

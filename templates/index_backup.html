@@ -1,0 +1,3303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub | AI-Powered Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           StudyHub — SaaS Dashboard Design System
+           ═══════════════════════════════════════════ */
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --primary-glow: rgba(37, 99, 235, 0.12);
+            --accent: #7c3aed;
+            --accent-light: #ede9fe;
+            --secondary: #64748b;
+            --secondary-dark: #475569;
+            --bg: #F8FAFC;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --border-muted: #D9DCE3;
+            --success: #22c55e;
+            --success-light: #dcfce7;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+
+            /* --- Spacing (8px system) --- */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 40px;
+            --space-3xl: 48px;
+
+            /* --- Radius --- */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 16px;
+            --radius-full: 9999px;
+
+            /* --- Shadows --- */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.12);
+
+            /* --- Transitions --- */
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+            --duration: 0.2s;
+            --duration-md: 0.3s;
+        }
+
+        /* --- Reset & Base --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.65;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* ═══ HEADER ═══ */
+        .header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: var(--space-md) var(--space-xl);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .user-menu {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* ═══ LAYOUT ═══ */
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* ═══ PANELS ═══ */
+        .panel {
+            padding: var(--space-lg);
+            background: var(--card-bg);
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .left-panel {
+            border-right: 1px solid var(--border);
+            background: #F5F7FB;
+            padding: var(--space-lg) var(--space-lg);
+        }
+
+        /* ═══ SECTION TITLES ═══ */
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: var(--space-md);
+            margin-top: var(--space-xl);
+            padding-bottom: var(--space-sm);
+        }
+
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        /* ═══ INPUTS ═══ */
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px 14px;
+            margin-bottom: var(--space-md);
+            border: 1.5px solid var(--border-muted);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: #fff;
+            outline: none;
+            transition: all var(--duration) var(--ease);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        input:hover,
+        select:hover,
+        textarea:hover {
+            border-color: #b0b8c4;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        /* ═══ BUTTONS ═══ */
+        .btn {
+            width: 100%;
+            padding: 11px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all var(--duration) var(--ease);
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #1e3a8a);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--border-muted);
+            color: var(--text-secondary);
+            box-shadow: none;
+            margin-top: var(--space-sm);
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+            border-color: #b0b8c4;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-outline.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            box-shadow: 0 1px 3px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+        }
+
+        /* ═══ UPLOAD ZONE ═══ */
+        .upload-zone {
+            border: 2px dashed var(--border-muted);
+            padding: var(--space-lg);
+            text-align: center;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            margin-bottom: var(--space-md);
+            background: #fff;
+            transition: all var(--duration-md) var(--ease);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ═══ MODE SWITCH ═══ */
+        .mode-switch {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: var(--space-md);
+        }
+
+        .mode-switch .btn {
+            width: auto;
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 13px;
+            border-radius: var(--radius-md);
+        }
+
+        /* ═══ TOPICS & CHIPS ═══ */
+        .topics-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            max-height: 150px;
+            overflow-y: auto;
+            padding: var(--space-sm) var(--space-md);
+            border: 1.5px solid var(--border-muted);
+            border-radius: var(--radius-md);
+            background: #fff;
+        }
+
+        .topic-chip {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 14px;
+            background: #f1f5f9;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            user-select: none;
+            border: 1.5px solid transparent;
+            transition: all var(--duration) var(--ease);
+            color: var(--text-secondary);
+        }
+
+        .topic-chip:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .topic-chip.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+        }
+
+        /* ═══ MODALS ═══ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            padding: var(--space-xl);
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: var(--shadow-xl);
+            animation: modalIn 0.25s var(--ease);
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* ═══ DOC ITEMS ═══ */
+        .doc-item {
+            padding: 12px var(--space-md);
+            background: #fff;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            transition: all var(--duration) var(--ease);
+            font-size: 13px;
+        }
+
+        .doc-item:hover {
+            border-color: var(--primary);
+            transform: translateX(3px);
+            box-shadow: var(--shadow-sm);
+            background: #fafbff;
+        }
+
+        .doc-item.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        /* ═══ RESULT BOX ═══ */
+        .result-box {
+            margin-top: var(--space-lg);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            background: #fff;
+            display: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.3s var(--ease);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ═══ QUESTION CARDS ═══ */
+        .question-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--duration) var(--ease);
+        }
+
+        .question-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .feedback-area {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: var(--space-md) var(--space-lg);
+            margin-top: var(--space-md);
+            font-size: 13px;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            line-height: 1.7;
+        }
+
+        /* ═══ TABLES ═══ */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: var(--space-md);
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 14px var(--space-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        tbody tr {
+            transition: background var(--duration) var(--ease);
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafbfd;
+        }
+
+        tbody tr:hover {
+            background: var(--primary-light);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ═══ TEST OVERLAY ═══ */
+        .test-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .test-header {
+            padding: var(--space-md) var(--space-xl);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .test-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .test-nav {
+            width: 260px;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: var(--space-lg);
+            overflow-y: auto;
+        }
+
+        .test-content {
+            flex: 1;
+            padding: var(--space-2xl);
+            overflow-y: auto;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .nav-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all var(--duration) var(--ease);
+            border: 2px solid transparent;
+            color: var(--text-secondary);
+        }
+
+        .nav-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-item.current {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .nav-item.attempted {
+            background: var(--success-light);
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+
+        /* ═══ INPUT GROUPS ═══ */
+        .input-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            letter-spacing: 0.1px;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            margin-bottom: 0;
+        }
+
+        /* ═══ SPINNER ═══ */
+        .spinner {
+            border: 3px solid var(--primary-light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            animation: spin 0.8s linear infinite;
+            margin: var(--space-md) auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ═══ AVATARS ═══ */
+        .avatar-grid {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            justify-content: center;
+        }
+
+        .avatar-option {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all var(--duration) var(--ease);
+            object-fit: cover;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.12);
+            box-shadow: var(--shadow-md);
+        }
+
+        .avatar-option.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        /* ═══ COMMUNITY CARDS ═══ */
+        .comm-card {
+            background: #fff;
+            border: 1.5px solid var(--border);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all var(--duration) var(--ease);
+        }
+
+        .comm-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
+        }
+
+        .comm-code {
+            background: var(--primary-light);
+            padding: 3px 10px;
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        /* ═══ HEADINGS (dynamic content) ═══ */
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        /* ═══ SELECTION ═══ */
+        ::selection {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* ═══ LINKS ═══ */
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color var(--duration) var(--ease);
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* ═══ HR ═══ */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: var(--space-lg) 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Application -->
+    <div id="mainApp">
+        <div class="header">
+            <div class="logo">✦ StudyHub</div>
+            <div class="user-menu" id="authSection">
+                <span>Welcome, <b>{{ user }}</b></span>
+                <a href="/logout" class="btn btn-outline"
+                    style="width:auto; padding:6px 18px; font-size:13px; border-radius:var(--radius-full);">Logout</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Sidebar -->
+            <div class="panel left-panel">
+                <div class="section-title">Library</div>
+                <div class="upload-zone" onclick="document.getElementById('pdfFile').click()">
+                    <p>📄 Upload New PDF</p>
+                    <input type="file" id="pdfFile" hidden onchange="handleFileSelect()">
+                    <small id="fileNameDisplay"
+                        style="display:block; margin-top:6px; color:var(--primary); font-weight:500;"></small>
+                </div>
+                <button class="btn" id="uploadBtn" onclick="uploadPDF()" style="margin-bottom: 20px;">Process
+                    Document</button>
+                <div id="upSpin" class="spinner"></div>
+                <div id="uploadStatus" style="font-size:0.85rem; color:var(--secondary); text-align:center;"></div>
+
+                <div class="section-title">My Documents</div>
+                <div id="booksList"></div>
+
+                <div class="section-title" style="margin-top:32px;">Menu</div>
+                <button class="btn btn-outline" onclick="showDashboard('student')" style="text-align:left;">📊 My
+                    Results</button>
+                <button class="btn btn-outline" onclick="showCommunity()" style="text-align:left;">👥 Community</button>
+
+                {% if role == 'teacher' %}
+                <button class="btn btn-outline" id="teacherDashboardBtn" onclick="showDashboard('teacher')"
+                    style="text-align:left;">🎓 Teacher
+                    Dashboard</button>
+                {% endif %}
+
+                {% if role == 'admin' %}
+                <button class="btn btn-outline" onclick="showAdminPanel()" style="text-align:left;">⚙ Admin
+                    Panel</button>
+                {% endif %}
+
+                <button class="btn btn-outline" onclick="showProfile()" style="text-align:left;">👤 My Profile</button>
+            </div>
+
+            <!-- Main Content -->
+            <div class="panel">
+                <!-- Mode Switcher -->
+                <div class="mode-switch">
+                    <button class="btn btn-outline active" id="btnQuestions" onclick="switchMode('questions')">📖 Study
+                        &
+                        Practice</button>
+                    <button class="btn btn-outline" id="btnTest" onclick="switchMode('test')">📝 Take Test</button>
+                    <button class="btn btn-outline" id="btnAsk" onclick="switchMode('ask')">🤖 Chat with AI</button>
+                </div>
+
+                <!-- 1. Question Generator -->
+                <div id="questionsMode">
+                    <div class="section-title">Customize Practice</div>
+                    <input type="text" id="genBookName" placeholder="Select a document first..." readonly
+                        style="background:#f1f5f9;">
+
+                    <label style="font-size:0.9rem; font-weight:600; display:block; margin-bottom:5px;">Select
+                        Topics:</label>
+                    <div id="genTopics" class="topics-container">
+                        <span style="color:#999; padding:5px;">Select a document to see topics.</span>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <select id="qType">
+                            <option value="conceptual">Conceptual Questions</option>
+                            <option value="mcq">Multiple Choice</option>
+                            <option value="analytical">Analytical / Case Study</option>
+                            <option value="fill">Fill in the Blanks</option>
+                            <option value="bool">True / False</option>
+                            <option value="mcq_conceptual">MCQ + Conceptual</option>
+                            <option value="mixed">Mixed (All Types)</option>
+                        </select>
+                        <input type="number" id="qNum" value="5" min="1" max="20" placeholder="Count"
+                            onchange="validatePositiveInput(this)">
+                    </div>
+
+                    <!-- PDF Metadata Inputs -->
+                    <div class="section-title" style="margin-top:20px;">PDF Header Details</div>
+                    <input type="text" id="pdfInstitute" placeholder="Institute Name (e.g. BITS PILANI)">
+                    <input type="text" id="pdfExamTitle" placeholder="Exam Title (e.g. Comprehensive Exam)">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+                        <input type="text" id="pdfDate" placeholder="Date (DD/MM/YYYY)">
+                        <input type="text" id="pdfDuration" placeholder="Duration (e.g. 90 min)">
+                        <input type="text" id="pdfMarks" placeholder="Max Marks">
+                    </div>
+
+                    <button class="btn" onclick="generateQuestions()" style="margin-top:15px;">Generate Content</button>
+                    <div id="genSpin" class="spinner"></div>
+                    <div id="genResult" class="result-box"></div>
+                    <button id="dlBtn" class="btn btn-outline" style="display:none; margin-top:10px;">Download
+                        PDF</button>
+                </div>
+
+                <!-- 2. Test Mode Config -->
+                <div id="testMode" style="display:none;">
+                    <div class="section-title">Configure Test</div>
+
+                    <div class="input-group">
+                        <label>Select Document</label>
+                        <input type="text" id="testBookName" placeholder="Select a document first..." readonly
+                            style="background:#f1f5f9;">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Focus Topics</label>
+                        <div id="testTopics" class="topics-container">
+                            <span style="color:#999; padding:5px;">Select a document to see topics.</span>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
+                        <div class="input-group">
+                            <label>Difficulty</label>
+                            <select id="testDifficulty">
+                                <option value="Easy">Easy</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Number of Questions</label>
+                            <input type="number" id="testQNum" value="10" min="1" placeholder="e.g. 10"
+                                onchange="validatePositiveInput(this)">
+                        </div>
+                        <div class="input-group">
+                            <label>Duration (Minutes)</label>
+                            <input type="number" id="testTimer" value="15" min="1" placeholder="e.g. 15"
+                                onchange="validatePositiveInput(this)">
+                        </div>
+                    </div>
+
+                    <button class="btn" onclick="startTest()">Start Test</button>
+                </div>
+
+                <!-- 3. Ask AI -->
+                <div id="askMode" style="display:none;">
+                    <div class="section-title">Chat Context</div>
+                    <input type="text" id="askBookName" placeholder="Select a document..." readonly
+                        style="background:#f1f5f9;">
+                    <textarea id="userQuery" placeholder="Ask anything about the document..."
+                        style="height:100px;"></textarea>
+                    <button class="btn" onclick="askQuestion()">Ask AI</button>
+                    <div id="askSpin" class="spinner"></div>
+                    <div id="askResult" class="result-box"></div>
+                </div>
+
+                <!-- 4. Dashboards -->
+                <div id="dashboardMode" style="display:none;">
+                    <div class="section-title" id="dashTitle">My Tests</div>
+                    <div id="dashContent"></div>
+
+                    <!-- Detail Modal (Simple inline for now) -->
+                    <div id="testDetailView"
+                        style="display:none; margin-top:20px; border-top:1px solid #ddd; padding-top:20px;">
+                        <button class="btn btn-outline" style="width:auto; margin-bottom:10px;"
+                            onclick="closeDetail()">←
+                            Back to List</button>
+                        <h3 id="detailTitle">Test Details</h3>
+                        <div id="detailContent"></div>
+                    </div>
+                </div>
+
+                <!-- 5. Profile Mode -->
+                <div id="profileMode" style="display:none;">
+                    <div class="section-title">My Profile</div>
+
+                    <div class="question-card">
+                        <!-- Avatar Selection -->
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <img id="currentAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+                                style="width:100px; height:100px; border-radius:50%; margin-bottom:12px; border:3px solid var(--border); box-shadow: var(--shadow-md);">
+                            <div class="avatar-grid" id="avatarSelector">
+                                <!-- JS will populate -->
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                            <div class="input-group">
+                                <label>Username</label>
+                                <input type="text" id="profUsername" placeholder="@username">
+                            </div>
+                            <div class="input-group">
+                                <label>Email Address</label>
+                                <input type="text" id="profEmail" readonly
+                                    style="background:#f1f5f9; cursor:not-allowed;">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Bio</label>
+                            <textarea id="profBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Role</label>
+                            <input type="text" id="profRole" readonly
+                                style="background:#f1f5f9; cursor:not-allowed; text-transform:capitalize;">
+                        </div>
+
+                        <div id="teacherVerifBadge"
+                            style="display:none; padding:10px; background:#fff7ed; color:#c2410c; border:1px solid #ffedd5; border-radius:6px; margin-bottom:15px;">
+                            ⚠ Verification Pending
+                        </div>
+
+                        <hr style="margin: 20px 0; border:0; border-top:1px solid #e2e8f0;">
+
+                        <!-- Student Fields -->
+                        <div id="studentFields" style="display:none;">
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                                <div class="input-group">
+                                    <label>School Name</label>
+                                    <input type="text" id="profSchool" placeholder="Enter school name">
+                                </div>
+                                <div class="input-group">
+                                    <label>Grade / Level</label>
+                                    <input type="text" id="profGrade" placeholder="e.g. 10th Grade">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Teacher Fields -->
+                        <div id="teacherFields" style="display:none;">
+                            <div class="input-group">
+                                <label>Institute / Organization</label>
+                                <input type="text" id="profInstitute" placeholder="Enter institute name">
+                            </div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                                <div class="input-group">
+                                    <label>Subject Specialization</label>
+                                    <input type="text" id="profSubject" placeholder="e.g. Mathematics">
+                                </div>
+                                <div class="input-group">
+                                    <label>Years of Experience</label>
+                                    <input type="number" id="profExp" min="0" placeholder="e.g. 5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn" onclick="saveProfile()" style="width:auto; margin-top:10px;">Save
+                            Changes</button>
+                        <div id="profMsg" style="margin-top:10px; font-size:0.9rem;"></div>
+                    </div>
+                </div>
+
+                <!-- 6. Community Mode -->
+                <div id="communityMode" style="display:none;">
+                    <div class="section-title">Community & Groups</div>
+                    <div class="mode-switch" style="border:none; margin-bottom:15px;">
+                        <button class="btn btn-outline active" id="btnTabGroups" onclick="showCommTab('groups')">Study
+                            Groups</button>
+                        <button class="btn btn-outline" id="btnTabClasses"
+                            onclick="showCommTab('classes')">Classrooms</button>
+                    </div>
+
+                    <!-- Groups Tab -->
+                    <div id="tabGroups">
+                        <div
+                            style="display:flex; gap:10px; margin-bottom:15px; background:#fff; padding:15px; border-radius:8px; border:1px solid var(--border);">
+                            <input type="text" id="joinGroupCode" placeholder="Enter 6-char Group Code"
+                                style="margin:0;">
+                            <button class="btn" style="width:auto;" onclick="joinGroup()">Join</button>
+                            <div style="width:1px; background:#ddd; margin:0 10px;"></div>
+                            <button class="btn btn-outline" style="margin-top:0;" onclick="createGroupPrompt()">+ Create
+                                Group</button>
+                        </div>
+                        <div class="section-title">My Groups</div>
+                        <div id="groupsList"></div>
+                    </div>
+
+                    <!-- Classes Tab -->
+                    <div id="tabClasses" style="display:none;">
+                        <div
+                            style="display:flex; gap:10px; margin-bottom:15px; background:#fff; padding:15px; border-radius:8px; border:1px solid var(--border);">
+                            <input type="text" id="joinClassCode" placeholder="Enter Class Code" style="margin:0;">
+                            <button class="btn" style="width:auto;" onclick="joinClass()">Join</button>
+                            <div style="width:1px; background:#ddd; margin:0 10px;"></div>
+                            <button class="btn btn-outline" id="createClassBtn" style="margin-top:0; display:none;"
+                                onclick="createClassPrompt()">+ Create Class</button>
+                        </div>
+                        <div class="section-title">My Classes</div>
+                        <div id="classesList"></div>
+                    </div>
+
+                    <!-- Class Details Area -->
+                    <div id="classDetailArea"
+                        style="display:none; background:#fff; border:1px solid var(--border); padding:20px; border-radius:8px;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <button class="btn btn-outline" style="width:auto; margin-bottom:0;"
+                                onclick="closeClassDetail()">← Back</button>
+
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn btn-outline" style="width:auto;" onclick="viewClassMembers()">
+                                    👥 Students
+                                </button>
+                                {% if role == 'teacher' %}
+                                <button class="btn btn-outline" style="width:auto;"
+                                    onclick="openCreateAssignmentModal('manual')">
+                                    + Custom Test
+                                </button>
+                                <button class="btn" style="width:auto;" onclick="openCreateAssignmentModal('ai')">
+                                    + New Assignment
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <h3 id="cDetailTitle" style="margin-bottom:5px;"></h3>
+                        <p id="cDetailDesc" style="color:var(--secondary); margin-bottom:20px;"></p>
+
+                        <div class="section-title">Assignments</div>
+                        <div id="cAssignmentList"></div>
+                    </div>
+
+                    <!-- Group Details Actions -->
+                    <div id="groupDetailArea"
+                        style="display:none; background:#fff; border:1px solid var(--border); padding:20px; border-radius:8px;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <button class="btn btn-outline" style="width:auto; margin-bottom:0;"
+                                onclick="closeCommDetail()">← Back</button>
+
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn btn-outline" style="width:auto;" onclick="viewGroupMembers()">
+                                    👥 View Members
+                                </button>
+                                {% if role == 'teacher' %}
+                                <button class="btn" style="width:auto;" onclick="openCreateChallengeModal()">
+                                    + New Challenge
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <h3 id="gDetailTitle" style="margin-bottom:5px;"></h3>
+                        <p id="gDetailDesc" style="color:var(--secondary); margin-bottom:20px;"></p>
+
+                        <div class="section-title">Group Challenges</div>
+                        <div id="gTestList"></div>
+                    </div>
+                    <!-- Group Details Actions -->
+                    <!-- ... (handled in previous step) ... -->
+                </div>
+
+                <!-- 7. Admin Mode -->
+                <div id="adminMode" style="display:none;">
+                    <div class="section-title">Admin Dashboard</div>
+
+                    <div class="mode-switch" style="border:none; margin-bottom:15px;">
+                        <button class="btn btn-outline active"
+                            onclick="showAdminTab('verifications', this)">Verifications</button>
+                        <button class="btn btn-outline" onclick="showAdminTab('users', this)">Users</button>
+                        <button class="btn btn-outline" onclick="showAdminTab('classes', this)">Classes</button>
+                        <button class="btn btn-outline" onclick="showAdminTab('resources', this)">Resources</button>
+                    </div>
+
+                    <div id="admin-verifications" class="admin-tab">
+                        <h3>Pending Teacher Verifications</h3>
+                        <div id="pendingList" style="margin-top:15px;"></div>
+                    </div>
+
+                    <div id="admin-users" class="admin-tab" style="display:none;">
+                        <h3>All Users</h3>
+                        <div id="adminUserList" style="margin-top:15px;"></div>
+                    </div>
+
+                    <div id="admin-classes" class="admin-tab" style="display:none;">
+                        <h3>All Classrooms</h3>
+                        <div id="adminClassList" style="margin-top:15px;"></div>
+                    </div>
+
+                    <div id="admin-resources" class="admin-tab" style="display:none;">
+                        <h3>All Resources (Books)</h3>
+                        <div id="adminResourceList" style="margin-top:15px;"></div>
+                    </div>
+
+                    <div id="admin-teacher-dash" class="admin-tab" style="display:none;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3>My Dashboard</h3>
+                            <button class="btn" style="width:auto;" onclick="openCreateAssignmentModal()">+ Create New
+                                Test / Assignment</button>
+                        </div>
+                        <div id="teacherAssignList" style="margin-top:15px;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- 1. Members Modal -->
+    <div id="membersModal" class="test-overlay" style="background:rgba(0,0,0,0.5); z-index:1100;">
+        <div
+            style="background:white; padding:20px; border-radius:8px; width:400px; max-height:80vh; overflow-y:auto; margin:50px auto;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                <h3>Group Members</h3>
+                <button onclick="document.getElementById('membersModal').style.display='none'"
+                    style="border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
+            </div>
+            <div id="membersList"></div>
+        </div>
+    </div>
+
+    <!-- 2. Create Challenge Modal -->
+    <div id="challengeModal" class="test-overlay" style="background:rgba(0,0,0,0.5); z-index:1100;">
+        <div style="background:white; padding:25px; border-radius:8px; width:500px; margin:50px auto;">
+            <h3 style="margin-bottom:15px;">Create Group Challenge</h3>
+
+            <div class="input-group">
+                <label>Select Document</label>
+                <select id="chBook" style="margin-bottom:10px;"></select>
+            </div>
+
+            <div class="input-group">
+                <label>Topics (comma separated or select in main)</label>
+                <input type="text" id="chTopics" placeholder="e.g. Chapter 1, Introduction">
+                <small style="color:#666;">Use main "Study" tab to explore topics first if needed.</small>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div class="input-group">
+                    <label>Difficulty</label>
+                    <select id="chDiff">
+                        <option>Easy</option>
+                        <option selected>Medium</option>
+                        <option>Hard</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Questions</label>
+                    <input type="number" id="chNum" value="5" min="1" onchange="validatePositiveInput(this)">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Password (Optional)</label>
+                <input type="text" id="chPass" placeholder="Require password to start...">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button class="btn btn-outline" style="width:auto;"
+                    onclick="document.getElementById('challengeModal').style.display='none'">Cancel</button>
+                <button class="btn" style="width:auto;" onclick="createGroupChallenge()">Create Challenge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Password Prompt Modal -->
+    <div id="passPromptModal" class="test-overlay" style="background:rgba(0,0,0,0.5); z-index:1100;">
+        <div style="background:white; padding:25px; border-radius:8px; width:400px; margin:100px auto;">
+            <h3 style="margin-bottom:10px;">🔒 Locked Challenge</h3>
+            <p style="margin-bottom:15px;">This test requires a password and location access.</p>
+
+            <input type="password" id="enterPass" placeholder="Enter Password">
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-outline" style="width:auto;"
+                    onclick="document.getElementById('passPromptModal').style.display='none'">Cancel</button>
+                <button class="btn" style="width:auto;" onclick="confirmStartChallenge()">Start</button>
+            </div>
+            <div id="passMsg" style="margin-top:10px; color:var(--danger); font-size:0.9rem;"></div>
+        </div>
+    </div>
+
+    <!-- 4. Create Assignment Modal -->
+    <div id="assignmentModal" class="test-overlay" style="background:rgba(0,0,0,0.5); z-index:1100;">
+        <div
+            style="background:white; padding:25px; border-radius:8px; width:700px; max-height:90vh; overflow-y:auto; margin:50px auto;">
+            <h3 style="margin-bottom:15px;">Create Class Assignment</h3>
+
+            <!-- Tabs -->
+            <div style="display:flex; gap:10px; margin-bottom:20px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <button class="btn btn-outline active" id="btnAssignAI" onclick="switchAssignMode('ai')">AI
+                    Generator</button>
+                <button class="btn btn-outline" id="btnAssignManual" onclick="switchAssignMode('manual')">Manual
+                    Builder</button>
+            </div>
+
+            <!-- Common Fields -->
+            <div class="input-group">
+                <label>Target Class</label>
+                <select id="assignClass" style="margin-bottom:12px;"></select>
+            </div>
+            <div class="input-group">
+                <label>Title</label>
+                <input type="text" id="assignTitle" placeholder="e.g. Week 1 Quiz">
+            </div>
+
+            <!-- Settings -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div class="input-group">
+                    <label>Duration (mins)</label>
+                    <input type="number" id="assignDuration" placeholder="e.g. 30">
+                </div>
+                <div class="input-group">
+                    <label>Total Marks</label>
+                    <input type="number" id="assignMarks" placeholder="e.g. 50">
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div class="input-group">
+                    <label>Password (Optional)</label>
+                    <input type="text" id="assignPass" placeholder="e.g. secret123">
+                </div>
+                <div class="input-group">
+                    <label>Institute Name</label>
+                    <input type="text" id="assignInstitute" value="BITS PILANI">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Due Date (Optional)</label>
+                <input type="date" id="assignDate">
+            </div>
+
+            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
+
+            <!-- AI Mode -->
+            <div id="assignModeAI">
+                <div class="input-group">
+                    <label>Select Document</label>
+                    <select id="assignBook" style="margin-bottom:10px;"></select>
+                </div>
+
+                <div class="input-group">
+                    <label>Topics (comma separated)</label>
+                    <input type="text" id="assignTopics" placeholder="e.g. Chapter 1, Introduction">
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div class="input-group">
+                        <label>Difficulty</label>
+                        <select id="assignDiff">
+                            <option>Easy</option>
+                            <option selected>Medium</option>
+                            <option>Hard</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Question Type</label>
+                        <select id="assignQType">
+                            <option value="conceptual">Conceptual / Short Answer</option>
+                            <option value="mcq">Multiple Choice</option>
+                            <option value="analytical">Analytical / Case Study</option>
+                            <option value="fill">Fill in the Blanks</option>
+                            <option value="bool">True / False</option>
+                            <option value="mcq_conceptual">MCQ + Conceptual</option>
+                            <option value="mixed">Mixed (All Types)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Number of Questions</label>
+                    <input type="number" id="assignNum" value="5" min="1">
+                </div>
+            </div>
+
+            <!-- Manual Mode -->
+            <div id="assignModeManual" style="display:none;">
+                <div id="manualQuestionsList">
+                    <!-- Questions added here -->
+                </div>
+                <button class="btn btn-outline" onclick="addManualQuestion()" style="width:100%; border-style:dashed;">+
+                    Add Question</button>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button class="btn btn-outline" style="width:auto;"
+                    onclick="document.getElementById('assignmentModal').style.display='none'">Cancel</button>
+                <button class="btn" style="width:auto;" onclick="createAssignment()">Create Assignment</button>
+            </div>
+            <div id="assignCreateMsg" style="margin-top:10px; font-size:0.9rem;"></div>
+        </div>
+    </div>
+
+    <!-- Full Screen Test Overlay -->
+    <div id="testOverlay" class="test-overlay" style="display:none;">
+        <div class="test-header">
+            <h3 style="margin:0;">Test in Progress</h3>
+            <div style="display:flex; gap:20px; align-items:center;">
+                <span id="timerDisplay" style="font-weight:bold; color:var(--danger); font-size:1.2rem;">15:00</span>
+                <button class="btn" style="background:var(--success); width:auto; padding:8px 20px;"
+                    onclick="finishTest()">Finish Test</button>
+            </div>
+        </div>
+        <div class="test-body">
+            <!-- Left Nav -->
+            <div class="test-nav">
+                <h4 style="margin-top:0;">Questions</h4>
+                <div id="questionNavGrid" class="nav-grid"></div>
+            </div>
+            <!-- Main Content -->
+            <div class="test-content">
+                <div style="margin-bottom:20px;">
+                    <span style="color:#666; font-size:0.9rem;">Question <span id="currentQNum">1</span></span>
+                </div>
+                <div class="question-card">
+                    <h2 id="displayQuestion" style="font-size:1.2rem; font-weight:500; line-height:1.5;"></h2>
+                </div>
+                <textarea id="testUserAnswer" placeholder="Type your answer here..."
+                    style="height:200px; margin-bottom:20px; font-size:1rem;"></textarea>
+
+                <div style="display:flex; justify-content:center; gap:20px;">
+                    <button class="btn btn-outline" style="width:auto; padding:10px 40px;"
+                        onclick="prevQ()">Previous</button>
+                    <button class="btn" style="width:auto; padding:10px 40px;" onclick="nextQ()">Next / Save</button>
+                </div>
+                <div id="saveStatus"
+                    style="text-align:center; color:#999; font-size:0.8rem; margin-top:10px; height:20px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestions = [];
+        let currentIdx = 0;
+        let activeDoc = "";
+        let currentTestId = null;
+        let testTimerInterval;
+        let userAnswers = {}; // Local state to track answers before finish
+        let currentUser = "{{ user }}"; // passed from flask
+        let currentUserRole = "{{ role }}"; // passed from flask
+        let currentAvatarUrl = "";
+
+        const studentAvatars = ["male_student.png", "female_student.png"];
+        const teacherAvatars = ["male_teacher.png", "female_teacher.png"];
+
+        function validatePositiveInput(input) {
+            if (input.value < 1) {
+                input.value = 1;
+            }
+        }
+
+        // --- Core Navigation ---
+        function switchMode(mode) {
+            ['questions', 'test', 'ask', 'dashboard', 'profile', 'community', 'admin'].forEach(m => {
+                const el = document.getElementById(m + 'Mode');
+                if (el) el.style.display = (m === mode) ? 'block' : 'none';
+            });
+
+            document.querySelectorAll('.mode-switch .btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('btn' + mode.charAt(0).toUpperCase() + mode.slice(1));
+            // community buttons are inside community mode
+            if (btn) btn.classList.add('active');
+        }
+
+        function showCommunity() {
+            switchMode('community');
+            loadCommunity();
+        }
+
+        function showDashboard(type) {
+            // Security check
+            if (type === 'teacher' && currentUserRole !== 'teacher') {
+                alert("Access Denied: Teachers only.");
+                return;
+            }
+            switchMode('dashboard');
+            document.getElementById('dashTitle').innerText = (type === 'student') ? 'My Test History' : 'Teacher Dashboard - Class Results';
+            loadResults(type);
+        }
+
+        // --- Profile Logic ---
+        function renderAvatarSelector() {
+            const container = document.getElementById('avatarSelector');
+            if (container.innerHTML) return; // Already rendered
+
+            const avatars = (currentUserRole === 'teacher') ? teacherAvatars : studentAvatars;
+            const path = (currentUserRole === 'teacher') ? '/static/avatars/teachers/' : '/static/avatars/students/';
+
+            avatars.forEach(filename => {
+                const url = path + filename;
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = 'avatar-option';
+                img.onclick = () => selectAvatar(url, img);
+                container.appendChild(img);
+            });
+        }
+
+        function selectAvatar(url, imgElement) {
+            currentAvatarUrl = url;
+            document.getElementById('currentAvatar').src = url;
+            document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+            if (imgElement) imgElement.classList.add('selected');
+        }
+
+        async function showProfile() {
+            switchMode('profile');
+            renderAvatarSelector();
+
+            const res = await fetch('/profile');
+            const data = await res.json();
+
+            if (data.success) {
+                const p = data.profile;
+                // document.getElementById('profName').value = p.name || ""; // removed
+                document.getElementById('profEmail').value = p.email || "";
+                document.getElementById('profRole').value = p.role || "";
+                document.getElementById('profUsername').value = p.username || "";
+                document.getElementById('profBio').value = p.bio || "";
+
+                if (p.avatar_url) {
+                    selectAvatar(p.avatar_url, null); // Just update state and main image
+                } else {
+                    selectAvatar(`https://api.dicebear.com/7.x/avataaars/svg?seed=${p.name || 'user'}`, null);
+                }
+
+                // Show/Hide fields based on role
+                document.getElementById('studentFields').style.display = (p.role === 'student') ? 'block' : 'none';
+                document.getElementById('teacherFields').style.display = (p.role === 'teacher') ? 'block' : 'none';
+
+                if (p.role === 'student') {
+                    document.getElementById('profSchool').value = p.school_name || "";
+                    document.getElementById('profGrade').value = p.grade_level || "";
+                } else if (p.role === 'teacher') {
+                    document.getElementById('profInstitute').value = p.institute || "";
+                    document.getElementById('profSubject').value = p.subject || "";
+                    document.getElementById('profExp').value = p.years_of_experience || "";
+
+                    // Verification Badge
+                    const badge = document.getElementById('teacherVerifBadge');
+                    if (!p.is_verified) {
+                        badge.style.display = 'block';
+                        badge.innerHTML = '⚠ Verification Pending: You cannot access Teacher Dashboard yet.';
+                    } else {
+                        badge.style.display = 'block';
+                        badge.style.background = '#dcfce7';
+                        badge.style.color = '#166534';
+                        badge.style.borderColor = '#bbf7d0';
+                        badge.innerHTML = '✔ Verified Teacher';
+                    }
+                }
+            } else {
+                alert("Failed to load profile.");
+            }
+        }
+
+        async function saveProfile() {
+            const role = document.getElementById('profRole').value;
+            // Basic payload
+            let payload = {
+                username: document.getElementById('profUsername').value,
+                bio: document.getElementById('profBio').value,
+                avatar_url: currentAvatarUrl
+            };
+
+            if (role === 'student') {
+                payload.school_name = document.getElementById('profSchool').value;
+                payload.grade_level = document.getElementById('profGrade').value;
+            } else if (role === 'teacher') {
+                payload.institute = document.getElementById('profInstitute').value;
+                payload.subject = document.getElementById('profSubject').value;
+                payload.years_of_experience = document.getElementById('profExp').value;
+            }
+
+            const msg = document.getElementById('profMsg');
+            msg.innerText = "Saving...";
+            msg.style.color = "var(--secondary)";
+
+            try {
+                const res = await fetch('/update-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    msg.innerText = "Profile updated successfully!";
+                    msg.style.color = "var(--success)";
+                } else {
+                    msg.innerText = "Error: " + data.error;
+                    msg.style.color = "var(--danger)";
+                }
+            } catch (e) {
+                console.error(e);
+                msg.innerText = "Server error.";
+                msg.style.color = "var(--danger)";
+            }
+        }
+
+        function showDashboard(type) {
+            // Security check
+            if (type === 'teacher' && currentUserRole !== 'teacher') {
+                alert("Access Denied: Teachers only.");
+                return;
+            }
+            switchMode('dashboard');
+            document.getElementById('dashTitle').innerText = (type === 'student') ? 'My Test History' : 'Teacher Dashboard - Class Results';
+            loadResults(type);
+        }
+
+        // --- Auth & Init ---
+        window.onload = function () {
+            loadBooks();
+        };
+
+        // --- File System & Selection ---
+        async function loadBooks() {
+            const res = await fetch('/list-books');
+            const data = await res.json();
+            const list = document.getElementById('booksList');
+            if (data.books) {
+                list.innerHTML = data.books.map(b => `
+                <div class="doc-item" id="doc-${b}" onclick="selectDoc('${b}')">
+                    <span style="flex:1;">📄 ${b}</span>
+                    <button style="border:none;background:none;color:var(--danger);cursor:pointer;"
+                            onclick="event.stopPropagation(); deleteDoc('${b}')">✕</button>
+                </div>
+                `).join('');
+            }
+        }
+
+        function selectDoc(name) {
+            activeDoc = name;
+            document.querySelectorAll('.doc-item').forEach(el => el.classList.remove('active'));
+            const activeEl = document.getElementById(`doc-${name}`);
+            if (activeEl) activeEl.classList.add('active');
+
+            ['gen', 'ask', 'test'].forEach(prefix => {
+                const el = document.getElementById(prefix + 'BookName');
+                if (el) el.value = name;
+            });
+
+            loadTopics(name);
+        }
+
+        async function loadTopics(name) {
+            const res = await fetch('/get-topics', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ book_name: name })
+            });
+            const data = await res.json();
+
+            const renderTopics = (containerId) => {
+                const container = document.getElementById(containerId);
+                if (data.topics && data.topics.length > 0) {
+                    container.innerHTML = data.topics.map(t => `
+                        <div class="topic-chip" onclick="this.classList.toggle('selected')">${t.title}</div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<span style="color:#666; font-size:0.9rem;">Whole Document (No topics found)</span>';
+                }
+            };
+
+            renderTopics('genTopics');
+            renderTopics('testTopics');
+        }
+
+        function getSelectedTopics(containerId) {
+            const chips = document.querySelectorAll(`#${containerId} .topic-chip.selected`);
+            return Array.from(chips).map(c => c.innerText);
+        }
+
+        // --- Upload ---
+        function handleFileSelect() {
+            const file = document.getElementById('pdfFile').files[0];
+            if (file) document.getElementById('fileNameDisplay').innerText = file.name;
+        }
+
+        async function uploadPDF() {
+            const fileInput = document.getElementById('pdfFile');
+            if (!fileInput.files[0]) return alert("Please select a PDF.");
+
+            const file = fileInput.files[0];
+            const fd = new FormData();
+            fd.append('file', file);
+
+            document.getElementById('upSpin').style.display = 'block';
+            document.getElementById('uploadStatus').innerText = "Starting...";
+
+            // Start Polling
+            const pollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('/upload-progress/' + encodeURIComponent(file.name));
+                    const data = await res.json();
+                    if (data.status) {
+                        document.getElementById('uploadStatus').innerText = `${data.status} (${data.percent}%)`;
+                    }
+                } catch (e) { console.error("Poll error", e); }
+            }, 1000);
+
+            try {
+                const res = await fetch('/upload', { method: 'POST', body: fd });
+                const data = await res.json();
+
+                clearInterval(pollInterval); // Stop polling
+                document.getElementById('upSpin').style.display = 'none';
+
+                if (data.success) {
+                    document.getElementById('uploadStatus').innerText = "Done!";
+                    loadBooks();
+                } else {
+                    document.getElementById('uploadStatus').innerText = "Failed: " + data.error;
+                }
+            } catch (e) {
+                clearInterval(pollInterval);
+                document.getElementById('upSpin').style.display = 'none';
+                document.getElementById('uploadStatus').innerText = "Error: Server connection failed";
+            }
+        }
+
+        // --- Generator ---
+        let lastQuestionsText = "";
+
+        async function generateQuestions() {
+            if (!activeDoc) return alert("Select a document.");
+            const topics = getSelectedTopics('genTopics');
+
+            document.getElementById('genSpin').style.display = 'block';
+            const res = await fetch('/generate-questions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    book_name: activeDoc,
+                    topics: topics,
+                    question_type: document.getElementById('qType').value,
+                    num_questions: document.getElementById('qNum').value
+                })
+            });
+
+            try {
+                const data = await res.json();
+                document.getElementById('genSpin').style.display = 'none';
+
+                if (res.ok) {
+                    lastQuestionsText = data.questions;
+                    const resBox = document.getElementById('genResult');
+                    resBox.innerHTML = `<pre style="white-space: pre-wrap;">${data.questions}</pre>`;
+                    resBox.classList.add('show');
+                    document.getElementById('dlBtn').style.display = 'block';
+                } else {
+                    alert("Error: " + (data.error || "Unknown backend error"));
+                }
+            } catch (e) {
+                document.getElementById('genSpin').style.display = 'none';
+                console.error(e);
+                // Likely 500 HTML response
+                const text = await res.text();
+                console.error("Backend response:", text);
+                alert("Server error occurred. Check console.");
+            }
+        }
+
+        // download handler
+        // download handler
+        document.getElementById('dlBtn').onclick = async () => {
+            if (!lastQuestionsText) return alert("Generate questions first.");
+
+            const res = await fetch('/download-questions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    questions: lastQuestionsText,
+                    filename: `${activeDoc || 'questions'}.pdf`,
+                    institute: document.getElementById('pdfInstitute').value || "BIRLA INSTITUTE OF TECHNOLOGY AND SCIENCE, PILANI",
+                    title: document.getElementById('pdfExamTitle').value || "Comprehensive Exam",
+                    date: document.getElementById('pdfDate').value || new Date().toLocaleDateString(),
+                    duration: document.getElementById('pdfDuration').value || "90 min",
+                    marks: document.getElementById('pdfMarks').value || "40"
+                })
+            });
+
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${activeDoc || 'questions'}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } else {
+                alert("Failed to generate PDF. Check backend.");
+            }
+        };
+
+        async function askQuestion() {
+            const query = document.getElementById('userQuery').value;
+            document.getElementById('askSpin').style.display = 'block';
+            const res = await fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ book_name: activeDoc, question: query })
+            });
+            const data = await res.json();
+            document.getElementById('askSpin').style.display = 'none';
+            const resBox = document.getElementById('askResult');
+            resBox.innerHTML = `<strong>AI Answer:</strong><p>${data.answer}</p>`;
+            resBox.classList.add('show');
+        }
+
+        // --- Test Logic ---
+        async function startTest() {
+            if (!activeDoc) return alert("Select a document.");
+            const topics = getSelectedTopics('testTopics');
+
+            const res = await fetch('/generate-test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    book_name: activeDoc,
+                    topics: topics,
+                    difficulty: document.getElementById('testDifficulty').value,
+                    num_questions: document.getElementById('testQNum').value
+                })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                currentQuestions = data.questions;
+                currentTestId = data.test_id;
+                currentIdx = 0;
+                userAnswers = {}; // Reset answers
+
+                // Clear any existing timer
+                if (testTimerInterval) {
+                    clearInterval(testTimerInterval);
+                }
+
+                // Show Overlay
+                document.getElementById('testOverlay').style.display = 'flex';
+                // Start Timer
+                startTimer(document.getElementById('testTimer').value);
+                // Render
+                updateTestUI();
+            }
+        }
+
+        function startTimer(minutes) {
+            let totalSeconds = minutes * 60;
+
+            function updateDisplay() {
+                const mins = Math.floor(totalSeconds / 60);
+                const secs = totalSeconds % 60;
+                document.getElementById('timerDisplay').innerText =
+                    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                if (totalSeconds <= 0) {
+                    clearInterval(testTimerInterval);
+                    alert("Time's up!");
+                    finishTest();
+                }
+                totalSeconds--;
+            }
+
+            // Update immediately
+            updateDisplay();
+            // Then update every second
+            testTimerInterval = setInterval(updateDisplay, 1000);
+        }
+
+
+        function updateTestUI() {
+            // Update Question
+            document.getElementById('displayQuestion').innerText = currentQuestions[currentIdx];
+            document.getElementById('currentQNum').innerText = currentIdx + 1;
+
+            // Restore answer if exists
+            document.getElementById('testUserAnswer').value = userAnswers[currentIdx] || "";
+
+            renderNav();
+
+            // Update Next/Finish Button
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentIdx === currentQuestions.length - 1) {
+                nextBtn.innerText = "Finish Test";
+                nextBtn.onclick = finishTest;
+                nextBtn.classList.remove('btn-outline'); // Make it stand out
+                nextBtn.style.background = "var(--success)";
+                nextBtn.style.color = "white";
+            } else {
+                nextBtn.innerText = "Next / Save";
+                nextBtn.onclick = nextQ;
+                nextBtn.style.background = ""; // Reset
+                nextBtn.style.color = "";
+            }
+        }
+
+        function renderNav() {
+            const grid = document.getElementById('questionNavGrid');
+            grid.innerHTML = currentQuestions.map((q, i) => {
+                let statusClass = '';
+                if (i === currentIdx) statusClass = 'current';
+                else if (userAnswers[i]) statusClass = 'attempted';
+
+                return `<div class="nav-item ${statusClass}" onclick="jumpToQ(${i})">${i + 1}</div>`;
+            }).join('');
+        }
+
+        async function saveCurrentAnswer() {
+            const ans = document.getElementById('testUserAnswer').value;
+            userAnswers[currentIdx] = ans; // Update local state
+
+            document.getElementById('saveStatus').innerText = "Saving...";
+
+            // Background save
+            await fetch('/submit-answer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    test_id: currentTestId,
+                    question: currentQuestions[currentIdx],
+                    user_answer: ans
+                })
+            });
+            document.getElementById('saveStatus').innerText = "Saved";
+        }
+
+        async function nextQ() {
+            await saveCurrentAnswer();
+            if (currentIdx < currentQuestions.length - 1) {
+                currentIdx++;
+                updateTestUI();
+            }
+        }
+
+        async function prevQ() {
+            await saveCurrentAnswer(); // Save before moving back too
+            if (currentIdx > 0) {
+                currentIdx--;
+                updateTestUI();
+            }
+        }
+
+        async function jumpToQ(i) {
+            await saveCurrentAnswer();
+            currentIdx = i;
+            updateTestUI();
+        }
+
+        async function finishTest() {
+            if (!confirm("Are you sure you want to finish the test?")) return;
+
+            // Save the current answer to local state first
+            const currentAns = document.getElementById('testUserAnswer').value;
+            userAnswers[currentIdx] = currentAns;
+
+            clearInterval(testTimerInterval);
+            document.getElementById('timerDisplay').innerText = "Submitting answers...";
+
+            // Submit ALL answers to the server before finishing
+            const submitPromises = [];
+            for (let i = 0; i < currentQuestions.length; i++) {
+                const ans = userAnswers[i] || "";
+                submitPromises.push(
+                    fetch('/submit-answer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            test_id: currentTestId,
+                            question: currentQuestions[i],
+                            user_answer: ans
+                        })
+                    })
+                );
+            }
+            await Promise.all(submitPromises);
+
+            document.getElementById('timerDisplay').innerText = "Evaluating...";
+
+            const res = await fetch('/finish-test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ test_id: currentTestId })
+            });
+
+            const data = await res.json();
+
+            document.getElementById('testOverlay').style.display = 'none';
+            alert(`Test Finished! Score: ${data.total_score}`);
+            showDashboard('student'); // Go to results
+        }
+
+        // --- Results Dashboard ---
+        // --- Results Dashboard ---
+        async function loadResults(type) {
+            document.getElementById('testDetailView').style.display = 'none';
+            document.getElementById('dashContent').style.display = 'block';
+            const container = document.getElementById('dashContent');
+
+            if (type === 'teacher') {
+                const [resAssign, resResults] = await Promise.all([
+                    fetch('/teacher/assignments'),
+                    fetch('/teacher/results')
+                ]);
+                const dataAssign = await resAssign.json();
+                const dataResults = await resResults.json();
+
+                let html = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h3>My Created Assignments</h3>
+                        <button class="btn" style="width:auto;" onclick="openCreateAssignmentModal()">+ Create New Test</button>
+                    </div>
+                `;
+
+                // 1. Created Assignments Table
+                if (dataAssign.success && dataAssign.assignments.length > 0) {
+                    html += `<table><thead><tr>
+                        <th>Title</th>
+                        <th>Class</th>
+                        <th>Created</th>
+                        <th>Questions</th>
+                        <th>Action</th>
+                    </tr></thead><tbody>`;
+
+                    dataAssign.assignments.forEach(a => {
+                        html += `<tr>
+                            <td>${a.title}</td>
+                            <td>${a.classrooms?.name || 'N/A'}</td>
+                            <td>${new Date(a.created_at).toLocaleDateString()}</td>
+                            <td>${a.questions?.length || 0}</td>
+                            <td>
+                                <button class="btn btn-outline" style="padding:2px 8px; font-size:0.8rem;" onclick="generateAssignmentPDF('${a.id}')">PDF</button>
+                            </td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table>';
+                } else {
+                    html += `<p style="color:#666; font-style:italic;">No assignments created yet.</p>`;
+                }
+
+                // 2. Student Results Table
+                html += `<h3 style="margin-top:30px; margin-bottom:15px;">Recent Student Results</h3>`;
+
+                if (dataResults.success && dataResults.results.length > 0) {
+                    html += `<table><thead><tr>
+                        <th>Date</th>
+                        <th>Student</th>
+                        <th>Book/Title</th>
+                        <th>Score</th>
+                        <th>Action</th>
+                    </tr></thead><tbody>`;
+
+                    dataResults.results.forEach(r => {
+                        const date = new Date(r.created_at).toLocaleDateString();
+                        html += `<tr>
+                            <td>${date}</td>
+                            <td>${r.users?.name || r.users?.email || 'N/A'}</td>
+                            <td>${r.book_name}</td>
+                            <td>${r.score}</td>
+                            <td><button class="btn btn-outline" style="width:auto; padding:2px 10px; font-size:0.8rem;" onclick="viewTestDetails('${r.id}')">View Details</button></td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table>';
+                } else {
+                    html += "<p>No results found.</p>";
+                }
+                container.innerHTML = html;
+            } else {
+                // Student View with Tabs
+                container.innerHTML = `
+                    <div class="mode-switch" style="margin-bottom:20px; text-align:left;">
+                        <button id="btnStRes" class="active" onclick="switchStudentTab('results')">Completed Tests</button>
+                        <button id="btnStAss" onclick="switchStudentTab('assignments')">My Assignments</button>
+                    </div>
+                    <div id="stResultArea">Loading...</div>
+                    <div id="stAssignArea" style="display:none;">Loading...</div>
+                `;
+                loadStudentTests();
+                loadStudentAssignments();
+            }
+        }
+
+        function switchStudentTab(tab) {
+            document.getElementById('btnStRes').classList.toggle('active', tab === 'results');
+            document.getElementById('btnStAss').classList.toggle('active', tab === 'assignments');
+            document.getElementById('stResultArea').style.display = tab === 'results' ? 'block' : 'none';
+            document.getElementById('stAssignArea').style.display = tab === 'assignments' ? 'block' : 'none';
+        }
+
+        async function loadStudentTests() {
+            const res = await fetch('/my-results');
+            const data = await res.json();
+            const area = document.getElementById('stResultArea');
+
+            if (data.success && data.results.length > 0) {
+                let html = `<table><thead><tr>
+                    <th>Date</th>
+                    <th>Book / Title</th>
+                    <th>Score</th>
+                    <th>Action</th>
+                </tr></thead><tbody>`;
+
+                data.results.forEach(r => {
+                    const date = new Date(r.created_at).toLocaleDateString();
+                    html += `<tr>
+                        <td>${date}</td>
+                        <td>${r.book_name}</td>
+                        <td>${r.score}</td>
+                        <td><button class="btn btn-outline" style="width:auto; padding:2px 10px; font-size:0.8rem;" onclick="viewTestDetails('${r.id}')">View Details</button></td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                area.innerHTML = html;
+            } else {
+                area.innerHTML = "<p>No completed tests found.</p>";
+            }
+        }
+
+        async function loadStudentAssignments() {
+            const res = await fetch('/my-assignments');
+            const data = await res.json();
+            const area = document.getElementById('stAssignArea');
+
+            if (data.success && data.assignments.length > 0) {
+                area.innerHTML = data.assignments.map(a => {
+                    const hasPass = !!a.password;
+                    const duration = a.duration_minutes;
+                    return `
+                     <div class="doc-item" style="cursor:default;">
+                        <div style="flex:1;">
+                            <strong>${a.title}</strong> <small class="text-gray-500">(${a.classrooms?.name})</small>
+                            <div style="font-size:0.85rem; color:#666;">
+                                Due: ${a.due_date ? new Date(a.due_date).toLocaleDateString() : 'No Date'} • ${a.difficulty}
+                                <br>
+                                ${duration ? '⏱ ' + duration + ' mins' : ''} ${hasPass ? '🔒 Password' : ''}
+                            </div>
+                        </div>
+                        <button class="btn" style="width:auto; padding:5px 15px; font-size:0.8rem;" 
+                                onclick="initiateAssignment('${a.id}', ${hasPass}, ${duration || 0})">Start Assignment</button>
+                     </div>
+                  `;
+                }).join('');
+            } else {
+                area.innerHTML = "<p>No pending assignments.</p>";
+            }
+        }
+
+        async function viewTestDetails(testId) {
+            const res = await fetch('/get-test-details', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ test_id: testId })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const t = data.test_info;
+                document.getElementById('dashContent').style.display = 'none';
+                const detailView = document.getElementById('testDetailView');
+                detailView.style.display = 'block';
+
+                document.getElementById('detailTitle').innerText = `Test Details: ${t.book_name} (${t.score} pts)`;
+
+                // --- Assign to Group UI ---
+                // Remove any existing assign div first
+                const existingAssign = document.getElementById('assignGroupDiv');
+                if (existingAssign) existingAssign.remove();
+
+                const assignDiv = document.createElement('div');
+                assignDiv.id = 'assignGroupDiv';
+                assignDiv.style.marginBottom = "20px";
+                assignDiv.style.padding = "10px";
+                assignDiv.style.background = "#f1f5f9";
+                assignDiv.style.borderRadius = "6px";
+
+                let reevalBtn = '';
+                if (currentUserRole === 'teacher') {
+                    reevalBtn = `<button class="btn" style="width:auto; float:right; background:var(--secondary);" onclick="openReevalModal('${testId}')">⚡ Re-evaluate Test</button>`;
+                }
+
+                assignDiv.innerHTML = `
+                    ${reevalBtn}
+                    <strong>Challenge a Group:</strong>
+                    <select id="assignGroupSelect" style="width:auto; display:inline-block; padding:5px; margin:0 10px;">
+                        <option value="">Loading groups...</option>
+                    </select>
+                    <button class="btn" style="width:auto; padding:5px 15px;" onclick="assignTestToGroup('${testId}')">Assign</button>
+                    <span id="assignMsg" style="margin-left:10px; font-size:0.9rem;"></span>
+                    <div style="clear:both;"></div>
+                `;
+                detailView.insertBefore(assignDiv, document.getElementById('detailContent'));
+
+                // Fetch groups to populate
+                fetch('/get-community').then(r => r.json()).then(gData => {
+                    const sel = document.getElementById('assignGroupSelect');
+                    if (gData.success && gData.data.groups.length > 0) {
+                        sel.innerHTML = gData.data.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+                    } else {
+                        sel.innerHTML = '<option value="">No groups found</option>';
+                    }
+                });
+
+                // Fetch existing teacher reviews
+                const reviewsRes = await fetch(`/get-reviews/${testId}`);
+                const reviewsData = await reviewsRes.json();
+                const reviews = reviewsData.success ? reviewsData.reviews : [];
+
+                // Create a map of reviews by question_id
+                const reviewMap = {};
+                reviews.forEach(r => {
+                    reviewMap[r.test_question_id] = r;
+                });
+
+                const isTeacher = currentUserRole === 'teacher';
+
+                if (!data.questions || data.questions.length === 0) {
+                    document.getElementById('detailContent').innerHTML = '<p style="color:#666; font-style:italic; padding:20px;">No question details available for this test. This may be from an older test where evaluation failed.</p>';
+                } else {
+                    document.getElementById('detailContent').innerHTML = data.questions.map((q, i) => {
+                        const existingReview = reviewMap[q.id];
+                        const reviewText = existingReview ? existingReview.review_text : '';
+                        const teacherName = existingReview && existingReview.users ? existingReview.users.name : 'Teacher';
+
+                        return `
+                        <div class="question-card" style="margin-bottom:20px;">
+                            <p><strong>Q${i + 1}:</strong> ${q.question}</p>
+                            <p style="background:#f8fafc; padding:10px; border-left:3px solid var(--primary);">
+                                <strong>Student Answer:</strong> ${q.user_answer || 'No answer provided'}
+                            </p>
+                            
+                            <!-- AI Evaluation -->
+                            <div class="feedback-area" style="margin-top:10px; background:#ecfdf5; border-left:4px solid #22c55e;">
+                                <strong>AI Evaluation (Score: ${q.score}/10)</strong><br>
+                                ${q.ai_evaluation ? q.ai_evaluation.replace(/\n/g, '<br>') : 'No feedback'}
+                            </div>
+                            
+                            <!-- Teacher Review Section -->
+                            ${isTeacher ? `
+                                <div style="margin-top:15px; padding:15px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:4px;">
+                                    <strong>Teacher Review:</strong>
+                                    <textarea 
+                                        id="review_${q.id}" 
+                                        placeholder="Add your review for this answer..."
+                                        style="width:100%; min-height:80px; margin-top:8px; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem;"
+                                    >${reviewText}</textarea>
+                                    <button 
+                                        class="btn" 
+                                        onclick="saveTeacherReview('${q.id}')"
+                                        style="margin-top:10px; width:auto; padding:8px 20px; font-size:0.9rem;"
+                                    >Save Review</button>
+                                    ${existingReview ? `<span style="color:#22c55e; margin-left:10px; font-size:0.85rem;">✓ Last saved: ${new Date(existingReview.reviewed_at).toLocaleString()}</span>` : ''}
+                                </div>
+                            ` : existingReview ? `
+                                <div style="margin-top:15px; padding:15px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:4px;">
+                                    <strong>Teacher Review by ${teacherName}:</strong><br>
+                                    <p style="margin-top:8px; white-space:pre-wrap;">${reviewText}</p>
+                                    <small style="color:#666;">Reviewed: ${new Date(existingReview.reviewed_at).toLocaleString()}</small>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    }).join('');
+                }
+            } else {
+                alert("Failed to load test details: " + (data.error || "Unknown error"));
+            }
+        }
+
+        async function saveTeacherReview(questionId) {
+            const reviewText = document.getElementById(`review_${questionId}`).value;
+
+            if (!reviewText.trim()) {
+                alert('Please enter a review before saving.');
+                return;
+            }
+
+            try {
+                const res = await fetch('/teacher/submit-review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        test_question_id: questionId,
+                        review_text: reviewText
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('Review saved successfully!');
+                    // Refresh the view to show updated timestamp
+                    const testId = new URLSearchParams(window.location.search).get('test_id');
+                    if (testId) {
+                        viewTestDetails(testId);
+                    }
+                } else {
+                    alert('Error saving review: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to save review. Please try again.');
+            }
+        }
+
+        async function assignTestToGroup(testId) {
+            const groupId = document.getElementById('assignGroupSelect').value;
+            if (!groupId) return alert("Select a group.");
+
+            const msg = document.getElementById('assignMsg');
+            msg.innerText = "Assigning...";
+
+            try {
+                const res = await fetch('/assign-test-to-group', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ test_id: testId, group_id: groupId })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    msg.innerText = "Success! Test assigned to group.";
+                    msg.style.color = "var(--success)";
+                } else {
+                    msg.innerText = "Error: " + data.error;
+                    msg.style.color = "var(--danger)";
+                }
+            } catch (e) {
+                msg.innerText = "Server error";
+            }
+        }
+
+
+        function closeDetail() {
+            document.getElementById('testDetailView').style.display = 'none';
+            document.getElementById('dashContent').style.display = 'block';
+        }
+
+        // --- Community Logic ---
+        let currentGroups = [];
+        let activeGroupId = null;
+
+        function showCommTab(tab) {
+            document.getElementById('tabGroups').style.display = (tab === 'groups') ? 'block' : 'none';
+            document.getElementById('tabClasses').style.display = (tab === 'classes') ? 'block' : 'none';
+
+            document.getElementById('btnTabGroups').classList.toggle('active', tab === 'groups');
+            document.getElementById('btnTabClasses').classList.toggle('active', tab === 'classes');
+        }
+
+        async function loadCommunity() {
+            const res = await fetch('/get-community');
+            const data = await res.json();
+
+            if (data.success) {
+                currentGroups = data.data.groups;
+                renderList('groupsList', currentGroups, 'group');
+                renderList('classesList', data.data.classes, 'class');
+
+                // Show teacher create button
+                if (currentUserRole === 'teacher') {
+                    document.getElementById('createClassBtn').style.display = 'inline-block';
+                }
+            }
+        }
+
+        function renderList(elId, items, type) {
+            const el = document.getElementById(elId);
+            if (!items || items.length === 0) {
+                el.innerHTML = "<p style='color:#777;'>No items found.</p>";
+                return;
+            }
+
+            el.innerHTML = items.map(item => `
+                <div class="comm-card" onclick="${type === 'group' ? `openGroupDetail('${item.id}', '${item.name}')` : ''}">
+                    <div>
+                        <div style="font-weight:600; font-size:1.05rem;">${item.name}</div>
+                        <div style="font-size:0.9rem; color:#666;">${item.description || item.subject || ''}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="comm-code">${item.code}</span>
+                        ${type === 'group' ? '<div style="font-size:0.8rem; color:var(--primary); margin-top:5px;">Click to view</div>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function createGroupPrompt() {
+            const name = prompt("Enter Group Name:");
+            if (!name) return;
+            const desc = prompt("Enter Description (optional):");
+
+            await apiCall('/create-group', { name, description: desc });
+            loadCommunity();
+        }
+
+        async function createClassPrompt() {
+            const name = prompt("Enter Class Name:");
+            if (!name) return;
+            const subject = prompt("Enter Subject:");
+
+            await apiCall('/create-class', { name, subject });
+            loadCommunity();
+        }
+
+        async function joinGroup() {
+            const code = document.getElementById('joinGroupCode').value;
+            if (!code) return alert("Enter code");
+            await apiCall('/join-group', { code });
+            loadCommunity();
+        }
+
+        async function joinClass() {
+            const code = document.getElementById('joinClassCode').value;
+            if (!code) return alert("Enter code");
+            await apiCall('/join-class', { code });
+            loadCommunity();
+        }
+
+        async function apiCall(endpoint, body) {
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Success!");
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (e) {
+                alert("Server error");
+            }
+        }
+
+        // --- Group Details & Testing ---
+        // --- Group Details & Testing ---
+        async function openGroupDetail(groupId, groupName) {
+            activeGroupId = groupId;
+            document.getElementById('communityMode').children[1].style.display = 'none'; // Hide mode-switch
+            document.getElementById('tabGroups').style.display = 'none';
+            document.getElementById('tabClasses').style.display = 'none';
+
+            const detailArea = document.getElementById('groupDetailArea');
+            detailArea.style.display = 'block';
+            document.getElementById('gDetailTitle').innerText = groupName;
+
+            loadGroupTests(groupId);
+        }
+
+        async function viewGroupMembers() {
+            const res = await fetch(`/get-group-members/${activeGroupId}`);
+            const data = await res.json();
+            const list = document.getElementById('membersList');
+            if (data.success) {
+                list.innerHTML = data.members.map(m => `
+                    <div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee;">
+                        <img src="${m.users?.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + m.users?.name}" 
+                             style="width:40px; height:40px; border-radius:50%;">
+                        <div>
+                            <div style="font-weight:600;">${m.users?.name}</div>
+                            <div style="font-size:0.85rem; color:#666;">${m.users?.username || ''}</div>
+                        </div>
+                    </div>
+                 `).join('');
+                document.getElementById('membersModal').style.display = 'flex';
+            } else {
+                alert("Failed to load members");
+            }
+        }
+
+        // --- Teacher Challenge Creation ---
+        async function openCreateChallengeModal() {
+            document.getElementById('challengeModal').style.display = 'flex';
+            // Populate Books
+            const res = await fetch('/list-books');
+            const data = await res.json();
+            const sel = document.getElementById('chBook');
+            sel.innerHTML = data.books.map(b => `<option value="${b}">${b}</option>`).join('');
+        }
+
+        async function createGroupChallenge() {
+            const book = document.getElementById('chBook').value;
+            if (!book) return alert("Select a book");
+
+            const topicsStr = document.getElementById('chTopics').value;
+            const topics = topicsStr ? topicsStr.split(',').map(s => s.trim()) : [];
+            const diff = document.getElementById('chDiff').value;
+            const num = document.getElementById('chNum').value;
+            const password = document.getElementById('chPass').value;
+
+            // Show loading or disable button...
+
+            const res = await fetch('/create-group-test-template', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    group_id: activeGroupId,
+                    book_name: book,
+                    topics: topics,
+                    difficulty: diff,
+                    num_questions: num,
+                    password: password
+                })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                alert("Challenge Created!");
+                document.getElementById('challengeModal').style.display = 'none';
+                loadGroupTests(activeGroupId); // Refresh list
+            } else {
+                alert("Error: " + data.error);
+            }
+        }
+
+        function closeCommDetail() {
+            document.getElementById('groupDetailArea').style.display = 'none';
+            document.getElementById('communityMode').children[1].style.display = 'flex';
+            showCommTab('groups');
+        }
+
+        async function loadGroupTests(groupId) {
+            const res = await fetch('/get-group-tests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ group_id: groupId })
+            });
+            const data = await res.json();
+
+            const list = document.getElementById('gTestList');
+            if (data.success && data.tests.length > 0) {
+                list.innerHTML = data.tests.map(t => `
+                    <div class="doc-item" onclick="promptStartGroupTest('${t.id}', '${t.book_name}', ${t.password ? 'true' : 'false'})">
+                        <div>
+                            <strong>${t.book_name}</strong>
+                            <div style="font-size:0.85rem; color:#666;">
+                                ${t.total_questions} Questions • ${t.difficulty} 
+                                ${t.password ? '🔒' : ''}
+                            </div>
+                        </div>
+                        <button class="btn" style="width:auto; padding:5px 15px; font-size:0.8rem;">Start Challenge</button>
+                    </div>
+                 `).join('');
+            } else {
+                list.innerHTML = "<p>No active challenges in this group.</p>";
+            }
+        }
+
+        // --- Start Challenge Logic ---
+        let pendingTestId = null;
+        let pendingBookName = null;
+
+        function promptStartGroupTest(testId, bookName, hasPassword) {
+            pendingTestId = testId;
+            pendingBookName = bookName;
+
+            if (hasPassword) {
+                document.getElementById('enterPass').value = '';
+                document.getElementById('passMsg').innerText = '';
+                document.getElementById('passPromptModal').style.display = 'flex';
+            } else {
+                confirmStartChallenge();
+            }
+        }
+
+        async function confirmStartChallenge() {
+            const password = document.getElementById('enterPass').value;
+
+            // Get Geolocation
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser.");
+                return;
+            }
+
+            document.getElementById('passMsg').innerText = "Acquiring Location...";
+
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+
+                // Now call backend
+                document.getElementById('passMsg').innerText = "Starting...";
+
+                const res = await fetch('/start-group-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        test_id: pendingTestId,
+                        password: password,
+                        location_lat: lat,
+                        location_long: long
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Close modals
+                    document.getElementById('passPromptModal').style.display = 'none';
+                    activeDoc = pendingBookName;
+                    currentTestId = data.test_id;
+
+                    const dRes = await fetch('/get-test-details', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ test_id: currentTestId })
+                    });
+                    const dData = await dRes.json();
+
+                    if (dData.success) {
+                        currentQuestions = dData.questions.map(q => q.question);
+                        currentIdx = 0;
+                        userAnswers = {};
+                        document.getElementById('testOverlay').style.display = 'flex';
+                        startTimer(15);
+                        updateTestUI();
+                    }
+                } else {
+                    document.getElementById('passMsg').innerText = data.error;
+                    if (!password) { // If it was a no-password attempt that failed
+                        alert("Error: " + data.error);
+                    }
+                }
+
+            }, (err) => {
+                alert("Location access denied or failed. You must allow location to take the test.");
+                document.getElementById('passMsg').innerText = "Location access denied.";
+            });
+        }
+
+
+        // --- Admin Logic ---
+        async function showAdminPanel() {
+            switchMode('admin');
+            showAdminTab('verifications', document.querySelector("#adminMode .mode-switch button"));
+        }
+
+        async function showAdminTab(tabName, btn) {
+            // UI
+            document.querySelectorAll("#adminMode .mode-switch button").forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            document.querySelectorAll(".admin-tab").forEach(t => t.style.display = 'none');
+            document.getElementById(`admin-${tabName}`).style.display = 'block';
+
+            // Load Data
+            if (tabName === 'verifications') loadPendingTeachers();
+            else if (tabName === 'users') loadAdminUsers();
+            else if (tabName === 'classes') loadAdminClasses();
+            else if (tabName === 'resources') loadAdminResources();
+            else if (tabName === 'teacher-dash') loadTeacherDashboard();
+        }
+
+        // --- Teacher Dashboard Logic ---
+        async function loadTeacherDashboard() {
+            const res = await fetch('/teacher/assignments');
+            const data = await res.json();
+            const list = document.getElementById('teacherAssignList');
+
+            if (data.success && data.assignments.length > 0) {
+                list.innerHTML = data.assignments.map(a => `
+                      <div class="doc-item" onclick="viewResponses('${a.id}')">
+                          <div style="flex:1;">
+                              <strong>${a.title}</strong> <span style="font-size:0.8rem; color:#888; margin-left:10px;">(${a.classrooms ? a.classrooms.name : 'N/A'})</span>
+                              <div style="font-size:0.85rem; color:#666;">
+                                  Created: ${new Date(a.created_at).toLocaleDateString()} • ${a.questions.length} Questions
+                              </div>
+                          </div>
+                          <div style="display:flex; gap:5px;">
+                              <button class="btn btn-outline" style="padding:5px 10px; font-size:0.8rem;" onclick="event.stopPropagation(); generateAssignmentPDF('${a.id}')">PDF</button>
+                              <button class="btn" style="padding:5px 10px; font-size:0.8rem;">View Responses</button>
+                          </div>
+                      </div>
+                  `).join('');
+            } else {
+                list.innerHTML = "<p>No assignments found.</p>";
+            }
+        }
+
+        async function viewResponses(assignId) {
+            document.getElementById('responseViewModal').style.display = 'block';
+            document.getElementById('responseListContent').innerHTML = "Loading...";
+
+            const res = await fetch(`/teacher/assignment-responses/${assignId}`);
+            const data = await res.json();
+
+            if (data.success) {
+                if (data.responses.length === 0) {
+                    document.getElementById('responseListContent').innerHTML = "<p>No responses yet.</p>";
+                    return;
+                }
+
+                document.getElementById('responseListContent').innerHTML = `
+                    <table style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:#f8f9fa; text-align:left;">
+                                <th style="padding:10px;">Student</th>
+                                <th style="padding:10px;">Score</th>
+                                <th style="padding:10px;">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.responses.map(r => `
+                                <tr style="border-bottom:1px solid #eee;">
+                                    <td style="padding:10px;">
+                                        <strong>${r.users?.name || r.users?.email}</strong><br>
+                                        <small>${r.users?.email}</small>
+                                    </td>
+                                    <td style="padding:10px;">${r.score}</td>
+                                    <td style="padding:10px;">${new Date(r.created_at).toLocaleString()}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                document.getElementById('responseListContent').innerText = "Error loading responses.";
+            }
+        }
+
+        async function loadPendingTeachers() {
+            const res = await fetch('/get-pending-teachers');
+            const data = await res.json();
+            const list = document.getElementById('pendingList');
+
+            if (data.success && data.teachers.length > 0) {
+                list.innerHTML = data.teachers.map(t => `
+                    <div style="background:white; padding:15px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong>${t.users?.name || 'Unknown'}</strong> (${t.users?.email})<br>
+                            <small class="text-gray-500">${t.users?.institute || 'No Institute'}</small>
+                        </div>
+                        <button class="btn" style="width:auto; background:var(--success);" onclick="approveTeacher('${t.user_id}')">Approve</button>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = "<p>No pending verifications.</p>";
+            }
+        }
+
+        async function approveTeacher(userId) {
+            if (!confirm("Verify this teacher?")) return;
+            const res = await fetch(`/verify-teacher/${userId}`, { method: 'POST' });
+            if ((await res.json()).success) {
+                alert("Verified!");
+                loadPendingTeachers();
+            }
+        }
+
+        async function loadAdminUsers() {
+            const res = await fetch('/admin/users');
+            const data = await res.json();
+            const list = document.getElementById('adminUserList');
+            if (data.success) {
+                list.innerHTML = `<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead><tbody>` +
+                    data.users.map(u => `
+                    <tr>
+                        <td>${u.name}</td>
+                        <td>${u.email}</td>
+                        <td>${u.role}</td>
+                        <td><button class="btn btn-danger" style="width:auto; padding:5px;" onclick="adminDelete('user', '${u.id}')">Delete</button></td>
+                    </tr>
+                 `).join('') + `</tbody></table>`;
+            }
+        }
+
+        async function loadAdminClasses() {
+            const res = await fetch('/admin/classes');
+            const data = await res.json();
+            const list = document.getElementById('adminClassList');
+            if (data.success) {
+                list.innerHTML = `<table><thead><tr><th>Name</th><th>Code</th><th>Teacher</th><th>Action</th></tr></thead><tbody>` +
+                    data.classes.map(c => `
+                    <tr>
+                        <td>${c.name}</td>
+                        <td>${c.code}</td>
+                        <td>${c.users?.name || c.users?.email}</td>
+                        <td><button class="btn btn-danger" style="width:auto; padding:5px;" onclick="adminDelete('class', '${c.id}')">Delete</button></td>
+                    </tr>
+                 `).join('') + `</tbody></table>`;
+            }
+        }
+
+        async function loadAdminResources() {
+            const res = await fetch('/admin/resources');
+            const data = await res.json();
+            const list = document.getElementById('adminResourceList');
+            if (data.success) {
+                list.innerHTML = data.resources.map(r => `
+                    <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                        <span>📚 ${r.name}</span>
+                        <button class="btn btn-danger" style="width:auto; padding:2px 10px;" onclick="adminDelete('resource', '${r.id}')">Delete</button>
+                    </div>
+                 `).join('');
+            }
+        }
+
+        async function adminDelete(type, id) {
+            if (!confirm(`Are you sure you want to delete this ${type}? This cannot be undone.`)) return;
+
+            const res = await fetch(`/admin/delete-${type}/${id}`, { method: 'DELETE' });
+            const data = await res.json();
+
+            if (data.success) {
+                alert("Deleted successfully");
+                // Refresh current tab
+                if (type === 'user') loadAdminUsers();
+                if (type === 'class') loadAdminClasses();
+                if (type === 'resource') loadAdminResources();
+            } else {
+                alert("Error: " + data.error);
+            }
+        }
+
+        // --- Class Details Logic ---
+        let activeClassId = null;
+
+        async function viewClassDetails(encodedClassId) { // encodedClassId might be passed from HTML string
+            // Actually it's passed as string from `join('')`
+
+            // BUT, we need to wire this up. the 'viewClassDetails' wasn't used in my previous html generation?
+            // Ah, I need to make sure `loadClasses` uses this.
+            // I'll update `loadClasses` (which is in `showCommTab` technically implicitly or explicitly)
+            // Wait, `loadClasses` logic is inside `showCommTab` ?? 
+            // Let's check `showCommTab`... it wasn't fully shown in the snippet.
+            // I need to make sure `renderClasses` calls `viewClassDetails`.
+            // I will overwrite `showCommTab` to be safe and robust.
+        }
+
+        // Re-implementing showCommTab to handle both groups and classes properly
+        async function showCommTab(tab) {
+            document.getElementById('btnTabGroups').classList.remove('active');
+            document.getElementById('btnTabClasses').classList.remove('active');
+            document.getElementById(`btnTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+
+            document.getElementById('tabGroups').style.display = (tab === 'groups') ? 'block' : 'none';
+            document.getElementById('tabClasses').style.display = (tab === 'classes') ? 'block' : 'none';
+            document.getElementById('createClassBtn').style.display = (currentUserRole === 'teacher' && tab === 'classes') ? 'block' : 'none';
+
+            if (tab === 'groups') loadGroups();
+            if (tab === 'classes') loadClasses();
+        }
+
+        async function loadGroups() {
+            const res = await fetch('/get-community');
+            const data = await res.json();
+            // Render Groups...
+            // (Reuse existing logic or simplified)
+            const list = document.getElementById('groupsList');
+            list.innerHTML = data.data.groups.map(g => `
+                <div class="comm-card">
+                    <div>
+                        <strong>${g.name}</strong><br>
+                        <small>${g.description}</small>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="comm-code">${g.code}</span><br>
+                        <button class="btn btn-outline" style="width:auto; margin-top:5px; padding:2px 10px; font-size:0.8rem;"
+                            onclick="openGroupDetail('${g.id}', '${g.name}', '${g.description}')">View</button>
+                    </div>
+                </div>
+             `).join('');
+        }
+
+        async function loadClasses() {
+            const res = await fetch('/get-community');
+            const data = await res.json(); // returns { groups: [], classes: [] }
+            const list = document.getElementById('classesList');
+
+            list.innerHTML = data.data.classes.map(c => `
+                <div class="comm-card">
+                    <div>
+                        <strong>${c.name}</strong><br>
+                        <small>${c.subject}</small>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="comm-code">${c.code}</span><br>
+                        <button class="btn btn-outline" style="width:auto; margin-top:5px; padding:2px 10px; font-size:0.8rem;"
+                             onclick="openClassDetail('${c.id}')">View</button>
+                    </div>
+                </div>
+             `).join('');
+        }
+
+        async function openClassDetail(classId) {
+            activeClassId = classId;
+            document.getElementById('tabClasses').style.display = 'none';
+            document.getElementById('classDetailArea').style.display = 'block';
+
+            const res = await fetch(`/get-class-details/${classId}`);
+            const data = await res.json();
+
+            if (data.success) {
+                const info = data.class_info;
+                document.getElementById('cDetailTitle').innerText = info.name;
+                document.getElementById('cDetailDesc').innerText = `${info.subject} • Teacher: ${info.users?.name || 'N/A'}`;
+
+                // Render Assignments
+                const assignments = data.assignments || [];
+                const list = document.getElementById('cAssignmentList');
+                list.innerHTML = assignments.map(a => {
+                    const hasPass = !!a.password;
+                    const duration = a.duration_minutes;
+                    return `
+                     <div class="doc-item" style="cursor:default;">
+                        <div style="flex:1;">
+                            <strong>${a.title}</strong>
+                            <div style="font-size:0.85rem; color:#666;">
+                                Due: ${a.due_date ? new Date(a.due_date).toLocaleDateString() : 'No Date'} • ${a.difficulty}
+                                <br>
+                                ${duration ? '⏱ ' + duration + ' mins' : ''} ${hasPass ? '🔒 Password' : ''}
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            ${currentUserRole === 'teacher' ?
+                            `<button class="btn btn-outline" style="padding:5px 10px; font-size:0.8rem;" onclick="generateAssignmentPDF('${a.id}')">📄 PDF</button>` : ''}
+                            <button class="btn" style="width:auto; padding:5px 15px; font-size:0.8rem;" 
+                                onclick="initiateAssignment('${a.id}', ${hasPass}, ${duration || 0})">Start</button>
+                        </div>
+                     </div>
+                  `;
+                }).join('');
+            }
+        }
+
+        function closeClassDetail() {
+            document.getElementById('classDetailArea').style.display = 'none';
+            document.getElementById('tabClasses').style.display = 'block';
+        }
+
+        async function viewClassMembers() {
+            // Re-fetch details to get fresh member list
+            const res = await fetch(`/get-class-details/${activeClassId}`);
+            const data = await res.json();
+
+            const list = document.getElementById('membersList'); // reuse members modal list
+            list.innerHTML = data.members.map(m => `
+                 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #eee;">
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <img src="${m.users?.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + m.user_id}" style="width:30px; height:30px; border-radius:50%;">
+                        <div>
+                            <strong>${m.users?.name || m.users?.username}</strong><br>
+                            <small>${m.users?.email}</small>
+                        </div>
+                    </div>
+                    ${currentUserRole === 'teacher' ?
+                    `<button class="btn btn-danger" style="width:auto; padding:2px 8px; font-size:0.8rem;" onclick="removeStudent('${m.user_id}')">Remove</button>`
+                    : ''}
+                 </div>
+             `).join('');
+
+            document.getElementById('membersModal').style.display = 'flex';
+        }
+
+        async function removeStudent(userId) {
+            if (!confirm("Remove this student?")) return;
+
+            const res = await fetch('/remove-class-member', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ class_id: activeClassId, user_id: userId })
+            });
+
+            if ((await res.json()).success) {
+                viewClassMembers(); // Refresh list
+            } else {
+                alert("Failed to remove member");
+            }
+        }
+
+        // --- Assignment Logic ---
+        let assignMode = 'ai';
+
+        function switchAssignMode(mode) {
+            assignMode = mode;
+            document.getElementById('btnAssignAI').classList.toggle('active', mode === 'ai');
+            document.getElementById('btnAssignManual').classList.toggle('active', mode === 'manual');
+            document.getElementById('assignModeAI').style.display = mode === 'ai' ? 'block' : 'none';
+            document.getElementById('assignModeManual').style.display = mode === 'manual' ? 'block' : 'none';
+        }
+
+        function openCreateAssignmentModal(mode = 'ai') {
+            // Populate Books dropdown
+            const sel = document.getElementById('assignBook');
+            fetch('/list-books').then(r => r.json()).then(d => {
+                sel.innerHTML = d.books.map(b => `<option value="${b}">${b}</option>`).join('');
+            });
+
+            // Populate Classes
+            const classSel = document.getElementById('assignClass');
+            fetch('/get-community').then(r => r.json()).then(d => {
+                if (d.success && d.data.classes.length > 0) {
+                    classSel.innerHTML = d.data.classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                    // If we are already in a class logic, pre-select it
+                    if (activeClassId) classSel.value = activeClassId;
+                } else {
+                    classSel.innerHTML = '<option value="">No classes found - Create one first</option>';
+                }
+            });
+
+            document.getElementById('assignmentModal').style.display = 'flex';
+            document.getElementById('assignCreateMsg').innerText = '';
+            switchAssignMode(mode); // Use passed mode
+            document.getElementById('manualQuestionsList').innerHTML = ''; // Clear manual
+        }
+
+        function addManualQuestion() {
+            const container = document.getElementById('manualQuestionsList');
+            const idx = container.children.length;
+            const div = document.createElement('div');
+            div.className = 'manual-q-item';
+            div.style.padding = "10px";
+            div.style.border = "1px solid #eee";
+            div.style.marginBottom = "10px";
+            div.style.background = "#fafafa";
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <strong>Question ${idx + 1}</strong>
+                    <button class="btn btn-danger" style="width:auto; padding:2px 8px; font-size:0.8rem;" onclick="this.parentElement.parentElement.remove()">Remove</button>
+                </div>
+                <input type="text" class="mq-text" placeholder="Question Text" style="margin-bottom:5px;">
+                <select class="mq-type" onchange="updateMqOptions(this)" style="margin-bottom:5px;">
+                    <option value="conceptual">Conceptual / Short Answer</option>
+                    <option value="mcq">Multiple Choice</option>
+                    <option value="fill">Fill in the Blanks</option>
+                </select>
+                <div class="mq-options" style="display:none;">
+                    <input type="text" class="mq-opt" placeholder="Option A, Option B, Option C, Option D (comma or newline separated)">
+                    <input type="text" class="mq-ans" placeholder="Correct Answer (e.g. Option A)">
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function updateMqOptions(select) {
+            const optsDiv = select.parentElement.querySelector('.mq-options');
+            optsDiv.style.display = select.value === 'mcq' ? 'block' : 'none';
+        }
+
+        async function createAssignment() {
+            const classId = document.getElementById('assignClass').value;
+            if (!classId) return alert("Please select a target class. If you have no classes, create one in Community tab.");
+
+            const title = document.getElementById('assignTitle').value;
+            if (!title) return alert("Title required");
+
+            const password = document.getElementById('assignPass').value;
+            const duration = document.getElementById('assignDuration').value;
+            const marks = document.getElementById('assignMarks').value;
+            const institute = document.getElementById('assignInstitute').value;
+            const dueDate = document.getElementById('assignDate').value;
+            const difficulty = document.getElementById('assignDiff').value;
+
+            document.getElementById('assignCreateMsg').innerText = "Processing...";
+
+            let questions = [];
+            let topics = [];
+
+            if (assignMode === 'ai') {
+                const book = document.getElementById('assignBook').value;
+                const topicsStr = document.getElementById('assignTopics').value;
+                topics = topicsStr.split(',').map(s => s.trim()).filter(s => s);
+                const qType = document.getElementById('assignQType').value;
+
+                // Call Generate
+                const genRes = await fetch('/generate-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book_name: book,
+                        topics: topics,
+                        difficulty: difficulty,
+                        question_type: qType, // Note: backend needs update to use this in generate_test if distinct from generate_questions
+                        num_questions: parseInt(document.getElementById('assignNum').value)
+                    })
+                });
+                const genData = await genRes.json();
+                if (!genData.success) {
+                    document.getElementById('assignCreateMsg').innerText = "Error: " + genData.error;
+                    return;
+                }
+                questions = genData.questions;
+
+            } else {
+                // Manual Mode
+                const items = document.querySelectorAll('.manual-q-item');
+                topics = ["Manual Custom Test"];
+                questions = [];
+                items.forEach(item => {
+                    const qText = item.querySelector('.mq-text').value;
+                    const qType = item.querySelector('.mq-type').value;
+                    if (qText) {
+                        let qObj = qText;
+                        if (qType === 'mcq') {
+                            const opts = item.querySelector('.mq-opt').value;
+                            qObj += `\n[Options: ${opts}]`;
+                        }
+                        questions.push(qObj);
+                    }
+                });
+
+                if (questions.length === 0) return alert("Add at least one question!");
+            }
+
+            // Save Assignment
+            const res = await fetch('/create-assignment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    class_id: classId,
+                    title: title,
+                    topics: topics,
+                    questions: questions,
+                    difficulty: difficulty,
+                    due_date: dueDate,
+                    password: password,
+                    duration: duration,
+                    marks: marks,
+                    institute: institute
+                })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                alert("Assignment Created!");
+                document.getElementById('assignmentModal').style.display = 'none';
+                openClassDetail(activeClassId); // Refresh
+            } else {
+                console.error(data);
+                document.getElementById('assignCreateMsg').innerText = "Error saving: " + (data.error || "Unknown");
+            }
+        }
+
+        // --- Start Assignment Logic ---
+        async function startClassAssignment(title, passwordProtected, duration, testId, questionsList) {
+            // If we have existing test_id logic we reuse it?
+            // Actually, `questionsList` here is just metadata about the assignment?
+            // No, `create-assignment` endpoint saves questions in `class_assignments` table.
+            // But valid "Test" record in `tests` table is created when STUDENT starts it.
+
+            // We need a specific start flow. 
+            // 1. Check Password
+            if (passwordProtected) {
+                const pass = prompt("Enter Assignment Password:");
+                if (!pass) return;
+                // In real app, we verify pass with backend before starting.
+                // For now, we will assume prompt is enough or verify in next step?
+                // Let's modify `generate-test` or create `start-assignment-test` endpoint?
+                // To keep it simple, we'll verify password client-side if we had it, but we don't.
+                // Implementation Plan said "Password ... for Class Assignments".
+                // Let's assume we send password to a new endpoint `/start-assignment`.
+
+                // For now, let's just use a client-side check if we had the password, 
+                // OR better: call a start endpoint that validates criteria.
+            }
+
+            // WE NEED A NEW ENDPOINT TO START ASSIGNMENT (Create Test Record from Assignment)
+            // I'll make a direct call here.
+
+            const p = passwordProtected ? prompt("Enter Assignment Password:") : null;
+            if (passwordProtected && !p) return;
+
+            // Start
+            const res = await fetch('/start-assignment-attempt', { // Need to implement this in backend? Or reuse logic?
+                // Wait, I forgot to add this endpoint to app.py? 
+                // Yes. I should add it. Or reuse `generate-test`? 
+                // `generate-test` generates NEW questions.
+                // We need to use EXISTING questions from `class_assignments`.
+
+                // Let's implement `start_assignment` in app.py logic... 
+                // Wait, I didn't add that to app.py in previous step.
+                // I should add it.
+            });
+
+            // ...
+        }
+
+        // Helper to open group detail (restoring previous logic)
+        async function openGroupDetail(id, name, desc) {
+            document.getElementById('communityMode').children[1].style.display = 'none'; // hide tabs
+            const area = document.getElementById('groupDetailArea');
+            area.style.display = 'block';
+            document.getElementById('gDetailTitle').innerText = name;
+            document.getElementById('gDetailDesc').innerText = desc;
+
+            // fetch tests
+            loadGroupTests(id);
+        }
+
+        async function initiateAssignment(assignId, hasPass, duration) {
+            let password = null;
+            if (hasPass) {
+                password = prompt("Enter Assignment Password:");
+                if (!password) return;
+            }
+
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser.");
+                return;
+            }
+
+            const confirmMsg = "Location access is required to start this assignment. Proceed?";
+            if (!confirm(confirmMsg)) return;
+
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+
+                // Start Assignment Attempt
+                const res = await fetch('/start-assignment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        assignment_id: assignId,
+                        password: password,
+                        location_lat: lat,
+                        location_long: long
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Common Test UI
+                    currentQuestions = data.questions;
+                    currentTestId = data.test_id;
+                    currentIdx = 0;
+                    userAnswers = {};
+                    document.getElementById('testOverlay').style.display = 'flex';
+                    startTimer(duration || 15); // Default 15 if not set
+                    updateTestUI();
+                } else {
+                    alert("Error: " + data.error);
+                }
+            }, (err) => {
+                alert("Location access denied or failed. You must allow location to take the test.");
+            });
+        }
+
+        async function generateAssignmentPDF(assignId) {
+            const res = await fetch('/generate-assignment-pdf', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ assignment_id: assignId })
+            });
+
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `assignment_${assignId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } else {
+                alert("Failed to generate PDF");
+            }
+        }
+
+        // Initialize
+        if ("{{ role }}" === "admin") {
+            showAdminPanel();
+        }
+    </script>
+    <!-- Re-evaluation Modal -->
+    <div id="reevalModal" class="modal-overlay" style="display:none; align-items:center; justify-content:center;">
+        <div class="modal-content" style="max-width:500px;">
+            <h3>Re-evaluate Test with Answer Key</h3>
+            <p style="font-size:0.9rem; color:#666;">Provide an answer key (text or PDF) to re-grade this test. The AI
+                will use this as ground truth.</p>
+
+            <div class="mode-switch" style="margin-bottom:15px; text-align:left;">
+                <button id="btnReevalText" class="active" onclick="switchReevalTab('text')">Text Input</button>
+                <button id="btnReevalFile" onclick="switchReevalTab('file')">Upload PDF</button>
+            </div>
+
+            <input type="hidden" id="reevalTestId">
+            <input type="hidden" id="reevalType" value="text">
+
+            <div id="reevalTextArea">
+                <textarea id="reevalTextContent" placeholder="Paste the correct answers or context here..."
+                    style="height:150px;"></textarea>
+            </div>
+
+            <div id="reevalFileArea" style="display:none;">
+                <input type="file" id="reevalFile" accept="application/pdf">
+                <p style="font-size:0.85rem; color:#666; margin-top:5px;">Upload a PDF containing the correct
+                    answers/solutions.</p>
+            </div>
+
+            <div id="reevalStatus" style="margin-top:10px; font-weight:bold;"></div>
+
+            <div style="text-align:right; margin-top:20px;">
+                <button class="btn btn-outline"
+                    onclick="document.getElementById('reevalModal').style.display='none'">Cancel</button>
+                <button class="btn" onclick="submitReevaluation()">Process Re-evaluation</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ... existing scripts ...
+
+        function openReevalModal(testId) {
+            document.getElementById('reevalTestId').value = testId;
+            document.getElementById('reevalModal').style.display = 'flex';
+            document.getElementById('reevalStatus').innerText = "";
+            switchReevalTab('text');
+        }
+
+        function switchReevalTab(tab) {
+            document.getElementById('reevalType').value = tab;
+            document.getElementById('btnReevalText').classList.toggle('active', tab === 'text');
+            document.getElementById('btnReevalFile').classList.toggle('active', tab === 'file');
+
+            document.getElementById('reevalTextArea').style.display = (tab === 'text') ? 'block' : 'none';
+            document.getElementById('reevalFileArea').style.display = (tab === 'file') ? 'block' : 'none';
+        }
+
+        async function submitReevaluation() {
+            const testId = document.getElementById('reevalTestId').value;
+            const type = document.getElementById('reevalType').value;
+            const statusFn = document.getElementById('reevalStatus');
+
+            const fd = new FormData();
+            fd.append('test_id', testId);
+            fd.append('instruction_type', type);
+
+            if (type === 'text') {
+                const text = document.getElementById('reevalTextContent').value;
+                if (!text.trim()) return alert("Please enter text.");
+                fd.append('text_content', text);
+            } else {
+                const file = document.getElementById('reevalFile').files[0];
+                if (!file) return alert("Please select a file.");
+                fd.append('file', file);
+            }
+
+            statusFn.innerText = "Processing... This may take a minute.";
+            statusFn.style.color = "var(--primary)";
+
+            try {
+                const res = await fetch('/teacher/reevaluate-test', {
+                    method: 'POST',
+                    body: fd
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    statusFn.innerText = "Success! Test re-evaluated.";
+                    statusFn.style.color = "var(--success)";
+                    setTimeout(() => {
+                        document.getElementById('reevalModal').style.display = 'none';
+                        viewTestDetails(testId); // Refresh view
+                    }, 1500);
+                } else {
+                    statusFn.innerText = "Error: " + data.error;
+                    statusFn.style.color = "var(--danger)";
+                }
+            } catch (e) {
+                statusFn.innerText = "Server Error";
+                statusFn.style.color = "var(--danger)";
+            }
+        }
+    </script>
+</body>
+
+</html>

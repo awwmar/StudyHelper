@@ -1,0 +1,54 @@
+{
+  "name": "small Dataset (10 passages)",
+  "size": 10,
+  "texts": [
+    "A binary search tree (BST) is a data structure where each node has at most two children. The left child contains values less than the parent, and the right child contains values greater. Searching in a balanced BST takes O(log n) time. However, in the worst case (a skewed tree), the time complexity degrades to O(n). Self-balancing trees like AVL and Red-Black trees maintain O(log n) guarantees by performing rotations after insertions and deletions.",
+    "Dynamic programming is an algorithmic paradigm that solves complex problems by breaking them into simpler overlapping subproblems. It stores results of subproblems to avoid redundant computation (memoization). Classic examples include the Fibonacci sequence, longest common subsequence, and the knapsack problem. The key characteristics are optimal substructure and overlapping subproblems.",
+    "TCP (Transmission Control Protocol) is a connection-oriented protocol that provides reliable, ordered delivery of data over IP networks. It uses a three-way handshake (SYN, SYN-ACK, ACK) for connection establishment. TCP implements flow control via sliding window protocol and congestion control through algorithms like slow start and congestion avoidance. It guarantees data integrity using checksums.",
+    "UDP (User Datagram Protocol) is a connectionless transport protocol that provides fast but unreliable data delivery. Unlike TCP, it does not guarantee delivery, ordering, or duplicate protection. UDP is preferred for real-time applications like video streaming, VoIP, and online gaming where low latency is more important than reliability. The header is only 8 bytes compared to TCP's 20 bytes minimum.",
+    "Hash tables provide O(1) average-case time complexity for insert, delete, and search operations. They use a hash function to map keys to array indices. Collisions occur when different keys hash to the same index and are resolved through chaining (linked lists) or open addressing (linear probing, quadratic probing, double hashing). The load factor affects performance significantly.",
+    "Dijkstra's algorithm finds the shortest path from a source vertex to all other vertices in a weighted graph with non-negative edge weights. It uses a priority queue (min-heap) for efficient vertex selection. The time complexity is O((V + E) log V) with a binary heap. It is a greedy algorithm that builds the shortest path tree one vertex at a time.",
+    "Object-oriented programming (OOP) is based on four pillars: encapsulation, inheritance, polymorphism, and abstraction. Encapsulation bundles data and methods that operate on that data within a single unit (class). Inheritance allows a class to inherit properties from another. Polymorphism enables objects to take multiple forms. Abstraction hides complex implementation details behind simple interfaces.",
+    "The MapReduce programming model processes large datasets across distributed clusters. The Map phase applies a function to each input element, producing key-value pairs. The Shuffle phase groups values by key. The Reduce phase aggregates grouped values. Google developed it for indexing the web, and Apache Hadoop provides an open-source implementation.",
+    "Recursion is a technique where a function calls itself to solve smaller instances of the same problem. Every recursive function must have a base case (termination condition) and a recursive case. The call stack stores each function call's local variables. Tail recursion is an optimization where the recursive call is the last operation, enabling stack frame reuse.",
+    "Machine learning algorithms can be categorized into supervised, unsupervised, and reinforcement learning. Supervised learning uses labeled data (e.g., linear regression, decision trees, neural networks). Unsupervised learning finds patterns in unlabeled data (e.g., k-means clustering, PCA). Reinforcement learning trains agents through rewards and penalties in an environment."
+  ],
+  "queries": [
+    {
+      "query": "What is binary search tree complexity?",
+      "relevant_indices": [
+        0
+      ]
+    },
+    {
+      "query": "How does TCP establish connections?",
+      "relevant_indices": [
+        2
+      ]
+    },
+    {
+      "query": "Explain dynamic programming with examples",
+      "relevant_indices": [
+        1
+      ]
+    },
+    {
+      "query": "Explain hash table collision resolution",
+      "relevant_indices": [
+        4
+      ]
+    },
+    {
+      "query": "Explain object oriented programming pillars",
+      "relevant_indices": [
+        6
+      ]
+    },
+    {
+      "query": "Shortest path algorithm in graphs",
+      "relevant_indices": [
+        5
+      ]
+    }
+  ]
+}

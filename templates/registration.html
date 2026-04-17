@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile | StudyHub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .role-badge.student {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .role-badge.teacher {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 15px;
+            margin-top: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        /* Avatar Selection */
+        .avatar-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .avatar-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: 0.2s;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.1);
+        }
+
+        .avatar-option.selected {
+            border-color: #667eea;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Complete Your Profile</h1>
+        <p class="subtitle">We need a few more details to personalize your experience</p>
+
+        <div class="role-badge {{ role }}">
+            {{ role|capitalize }}
+        </div>
+
+
+
+        <form id="registrationForm" onsubmit="submitForm(event)">
+            <!-- 1. Basic Info -->
+            <div class="section-title">Profile Details</div>
+
+            <div style="text-align:center; margin-bottom:20px;">
+                <label style="margin-bottom:10px;">Select Avatar</label>
+                <div class="avatar-grid" id="avatarSelector"></div>
+                <input type="hidden" id="avatar_url" name="avatar_url">
+            </div>
+
+            <div class="form-group">
+                <label>Username <span class="required">*</span></label>
+                <input type="text" id="username" name="username" required placeholder="@username"
+                    pattern="^[a-zA-Z0-9_]{3,20}$" title="3-20 chars, letters/numbers/underscore">
+            </div>
+
+            <div class="form-group">
+                <label>Bio</label>
+                <input type="text" id="bio" name="bio" placeholder="Tell us about yourself...">
+            </div>
+
+            <!-- 2. Role Specifics -->
+            <div class="section-title">Academic Details</div>
+
+            {% if role == 'teacher' %}
+            <div class="form-group">
+                <label>Institute/University <span class="required">*</span></label>
+                <input type="text" id="institute" name="institute" required placeholder="e.g., ABC University">
+                <div class="error" id="instituteError">Please enter your institute</div>
+            </div>
+
+            <div class="form-group">
+                <label>Subject/Department <span class="required">*</span></label>
+                <input type="text" id="subject" name="subject" required placeholder="e.g., Computer Science">
+                <div class="error" id="subjectError">Please enter your subject</div>
+            </div>
+
+            <div class="form-group">
+                <label>Years of Experience <span class="required">*</span></label>
+                <select id="years_of_experience" name="years_of_experience" required>
+                    <option value="">Select experience</option>
+                    <option value="0">Less than 1 year</option>
+                    <option value="1">1-2 years</option>
+                    <option value="3">3-5 years</option>
+                    <option value="6">6-10 years</option>
+                    <option value="11">10+ years</option>
+                </select>
+                <div class="error" id="experienceError">Please select your experience</div>
+            </div>
+            {% else %}
+            <div class="form-group">
+                <label>School/College Name <span class="required">*</span></label>
+                <input type="text" id="school_name" name="school_name" required placeholder="e.g., XYZ High School">
+                <div class="error" id="schoolError">Please enter your school name</div>
+            </div>
+
+            <div class="form-group">
+                <label>Grade/Year <span class="required">*</span></label>
+                <select id="grade_level" name="grade_level" required>
+                    <option value="">Select grade</option>
+                    <option value="9">Grade 9</option>
+                    <option value="10">Grade 10</option>
+                    <option value="11">Grade 11</option>
+                    <option value="12">Grade 12</option>
+                    <option value="college_1">College Year 1</option>
+                    <option value="college_2">College Year 2</option>
+                    <option value="college_3">College Year 3</option>
+                    <option value="college_4">College Year 4</option>
+                </select>
+                <div class="error" id="gradeError">Please select your grade</div>
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn" id="submitBtn">Complete Registration</button>
+        </form>
+    </div>
+
+    <script>
+        const userRole = "{{ role }}";
+        const studentAvatars = ["male_student.png", "female_student.png"];
+        const teacherAvatars = ["male_teacher.png", "female_teacher.png"];
+        let currentAvatarUrl = "";
+
+        // Init Avatars
+        window.onload = function () {
+            const container = document.getElementById('avatarSelector');
+            const avatars = (userRole === 'teacher') ? teacherAvatars : studentAvatars;
+            const path = (userRole === 'teacher') ? '/static/avatars/teachers/' : '/static/avatars/students/';
+
+            avatars.forEach((filename, index) => {
+                const url = path + filename;
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = 'avatar-option';
+                if (index === 0) selectAvatar(url, img); // Default select first
+                img.onclick = () => selectAvatar(url, img);
+                container.appendChild(img);
+            });
+        };
+
+        function selectAvatar(url, imgElement) {
+            currentAvatarUrl = url;
+            document.getElementById('avatar_url').value = url;
+            document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+            if (imgElement) imgElement.classList.add('selected');
+        }
+
+        async function submitForm(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const res = await fetch('/complete-registration', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+                if (result.success) {
+                    window.location.href = '/';
+                } else {
+                    alert('Error: ' + (result.error || 'Failed to save profile'));
+                    btn.disabled = false;
+                    btn.textContent = 'Complete Registration';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                btn.disabled = false;
+                btn.textContent = 'Complete Registration';
+            }
+        }
+    </script>
+</body>
+
+</html>

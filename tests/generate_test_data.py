@@ -1,0 +1,140 @@
+"""
+Test Data Generator — Creates academic text datasets of varying sizes.
+
+Generates test JSON files in the tests/ folder with different numbers of
+text passages for benchmarking indexing, chunking, and search performance.
+
+Usage:
+    cd c:\\Users\\Amar\\Desktop\\SOP
+    python tests/generate_test_data.py
+"""
+import json
+import os
+import random
+
+# Academic text corpus covering diverse subjects
+CORPUS = [
+    # Computer Science
+    "A binary search tree (BST) is a data structure where each node has at most two children. The left child contains values less than the parent, and the right child contains values greater. Searching in a balanced BST takes O(log n) time. However, in the worst case (a skewed tree), the time complexity degrades to O(n). Self-balancing trees like AVL and Red-Black trees maintain O(log n) guarantees by performing rotations after insertions and deletions.",
+    "Dynamic programming is an algorithmic paradigm that solves complex problems by breaking them into simpler overlapping subproblems. It stores results of subproblems to avoid redundant computation (memoization). Classic examples include the Fibonacci sequence, longest common subsequence, and the knapsack problem. The key characteristics are optimal substructure and overlapping subproblems.",
+    "TCP (Transmission Control Protocol) is a connection-oriented protocol that provides reliable, ordered delivery of data over IP networks. It uses a three-way handshake (SYN, SYN-ACK, ACK) for connection establishment. TCP implements flow control via sliding window protocol and congestion control through algorithms like slow start and congestion avoidance. It guarantees data integrity using checksums.",
+    "UDP (User Datagram Protocol) is a connectionless transport protocol that provides fast but unreliable data delivery. Unlike TCP, it does not guarantee delivery, ordering, or duplicate protection. UDP is preferred for real-time applications like video streaming, VoIP, and online gaming where low latency is more important than reliability. The header is only 8 bytes compared to TCP's 20 bytes minimum.",
+    "Hash tables provide O(1) average-case time complexity for insert, delete, and search operations. They use a hash function to map keys to array indices. Collisions occur when different keys hash to the same index and are resolved through chaining (linked lists) or open addressing (linear probing, quadratic probing, double hashing). The load factor affects performance significantly.",
+    "Dijkstra's algorithm finds the shortest path from a source vertex to all other vertices in a weighted graph with non-negative edge weights. It uses a priority queue (min-heap) for efficient vertex selection. The time complexity is O((V + E) log V) with a binary heap. It is a greedy algorithm that builds the shortest path tree one vertex at a time.",
+    "Object-oriented programming (OOP) is based on four pillars: encapsulation, inheritance, polymorphism, and abstraction. Encapsulation bundles data and methods that operate on that data within a single unit (class). Inheritance allows a class to inherit properties from another. Polymorphism enables objects to take multiple forms. Abstraction hides complex implementation details behind simple interfaces.",
+    "The MapReduce programming model processes large datasets across distributed clusters. The Map phase applies a function to each input element, producing key-value pairs. The Shuffle phase groups values by key. The Reduce phase aggregates grouped values. Google developed it for indexing the web, and Apache Hadoop provides an open-source implementation.",
+    "Recursion is a technique where a function calls itself to solve smaller instances of the same problem. Every recursive function must have a base case (termination condition) and a recursive case. The call stack stores each function call's local variables. Tail recursion is an optimization where the recursive call is the last operation, enabling stack frame reuse.",
+    "Machine learning algorithms can be categorized into supervised, unsupervised, and reinforcement learning. Supervised learning uses labeled data (e.g., linear regression, decision trees, neural networks). Unsupervised learning finds patterns in unlabeled data (e.g., k-means clustering, PCA). Reinforcement learning trains agents through rewards and penalties in an environment.",
+
+    # Mathematics
+    "The Fundamental Theorem of Calculus connects differentiation and integration. Part 1 states that if F is an antiderivative of f on [a, b], then the definite integral of f from a to b equals F(b) - F(a). Part 2 states that if f is continuous on [a, b], then the function F(x) = integral from a to x of f(t)dt is continuous and differentiable, with F'(x) = f(x).",
+    "Linear algebra studies vector spaces and linear transformations. A matrix represents a linear transformation, and its eigenvalues reveal the scaling factors along eigenvectors. The determinant indicates whether a transformation preserves orientation (positive), reverses it (negative), or collapses dimensions (zero). Matrix decompositions like SVD and LU are fundamental in numerical computing.",
+    "Probability theory provides the mathematical foundation for reasoning under uncertainty. Bayes' theorem relates conditional probabilities: P(A|B) = P(B|A) * P(A) / P(B). The law of large numbers states that sample averages converge to the expected value as sample size increases. The central limit theorem shows that sums of independent random variables tend toward a normal distribution.",
+    "Graph theory studies mathematical structures used to model pairwise relations. A graph G = (V, E) consists of vertices V and edges E. Key concepts include connectivity, planarity, coloring, and flows. Euler's formula for planar graphs states V - E + F = 2, where F is the number of faces. Graph algorithms are essential in network analysis, social networks, and routing.",
+    "Differential equations describe relationships between functions and their derivatives. Ordinary differential equations (ODEs) involve functions of one variable. The general solution of a first-order linear ODE dy/dx + P(x)y = Q(x) uses an integrating factor e^(integral of P dx). Partial differential equations (PDEs) involve functions of multiple variables and arise in physics and engineering.",
+
+    # Physics
+    "Newton's laws of motion form the foundation of classical mechanics. The first law (inertia) states that an object remains at rest or in uniform motion unless acted upon by a net force. The second law (F = ma) relates force, mass, and acceleration. The third law states that every action has an equal and opposite reaction. These laws explain motion from falling apples to orbiting planets.",
+    "Thermodynamics governs energy transfer and transformation. The first law (conservation of energy) states that energy cannot be created or destroyed. The second law states that entropy of an isolated system always increases. The third law states that entropy approaches zero as temperature approaches absolute zero. These principles are fundamental to engines, refrigerators, and chemical reactions.",
+    "Quantum mechanics describes physics at atomic and subatomic scales. Heisenberg's uncertainty principle states that position and momentum cannot be simultaneously known with arbitrary precision. Schrodinger's equation describes how quantum states evolve over time. Wave-particle duality means particles exhibit both wave and particle properties. Quantum entanglement allows correlated measurements across distances.",
+    "Electromagnetic waves are oscillating electric and magnetic fields that propagate through space at the speed of light (3 × 10^8 m/s). Maxwell's equations unify electricity, magnetism, and optics. The electromagnetic spectrum includes radio waves, microwaves, infrared, visible light, ultraviolet, X-rays, and gamma rays, ordered by increasing frequency and energy.",
+
+    # Biology
+    "DNA (deoxyribonucleic acid) is a double-helix molecule that carries genetic information. It consists of nucleotide bases: adenine (A) pairs with thymine (T), and cytosine (C) pairs with guanine (G). DNA replication is semiconservative — each strand serves as a template. Transcription converts DNA to mRNA, and translation converts mRNA to protein at the ribosome.",
+    "Photosynthesis is the process by which plants, algae, and some bacteria convert light energy into chemical energy stored in glucose. The light-dependent reactions occur in the thylakoid membrane, producing ATP and NADPH. The Calvin cycle (light-independent reactions) occurs in the stroma, using CO2 to synthesize glucose. The overall equation is 6CO2 + 6H2O + light → C6H12O6 + 6O2.",
+    "Cell division occurs through mitosis and meiosis. Mitosis produces two genetically identical daughter cells for growth and repair, proceeding through prophase, metaphase, anaphase, and telophase. Meiosis produces four genetically diverse gametes (sex cells) through two divisions, involving crossing over and independent assortment, which increase genetic variation.",
+    "The human immune system has innate and adaptive components. Innate immunity provides immediate, non-specific defense through physical barriers (skin), chemical barriers (stomach acid), and immune cells (neutrophils, macrophages). Adaptive immunity is specific and develops memory through B cells (antibodies) and T cells (cell-mediated immunity), providing long-lasting protection after exposure.",
+
+    # Chemistry
+    "Chemical bonding determines molecular structure and properties. Ionic bonds form when electrons transfer between atoms with large electronegativity differences (e.g., NaCl). Covalent bonds involve electron sharing between atoms with similar electronegativities (e.g., H2O). Metallic bonds involve a sea of delocalized electrons shared among metal atoms, explaining conductivity and malleability.",
+    "Acids and bases are characterized by the Bronsted-Lowry theory where acids donate protons (H+) and bases accept protons. The pH scale measures hydrogen ion concentration: pH = -log[H+]. A pH below 7 is acidic, above 7 is basic, and 7 is neutral. Buffer solutions resist pH changes by containing a weak acid and its conjugate base, maintaining homeostasis in biological systems.",
+
+    # History
+    "The Industrial Revolution (1760-1840) transformed society from agrarian to industrial. Key innovations included the steam engine (James Watt), spinning jenny (James Hargreaves), and power loom. Factory systems replaced cottage industries, leading to urbanization. While productivity increased dramatically, working conditions were often harsh, eventually leading to labor movements and regulations.",
+    "The French Revolution (1789-1799) fundamentally changed European politics and society. Triggered by fiscal crisis, Enlightenment ideas, and social inequality, it overthrew the monarchy and established a republic. Key events include the storming of the Bastille, the Declaration of the Rights of Man, and the Reign of Terror. It influenced democratic movements worldwide and led to Napoleon's rise.",
+
+    # Data Structures (more)
+    "A heap is a complete binary tree that satisfies the heap property. In a max-heap, every parent node is greater than or equal to its children. In a min-heap, every parent is less than or equal. Heaps are commonly implemented as arrays where for index i, the left child is at 2i+1 and right child at 2i+2. Heaps enable efficient priority queue operations: insert and extract-min/max in O(log n).",
+    "B-trees are self-balancing search trees designed for disk-based storage systems. Each node can contain multiple keys and children, reducing disk I/O by minimizing tree height. A B-tree of order m has at most m children per node and at least ceil(m/2) children (except root). B+ trees, a variant, store all data in leaf nodes connected by linked lists, making range queries efficient. Databases like MySQL use B+ trees for indexing.",
+    "A trie (prefix tree) is a tree-like data structure used for efficient string searching and autocomplete. Each node represents a character, and paths from root to leaves form words. Tries provide O(m) lookup time where m is the word length, independent of the number of stored words. They are used in spell checkers, IP routing tables, and autocomplete systems.",
+]
+
+# Search queries with expected relevant text indices for accuracy testing
+SEARCH_QUERIES = [
+    {"query": "What is binary search tree complexity?", "relevant_indices": [0]},
+    {"query": "How does TCP establish connections?", "relevant_indices": [2]},
+    {"query": "Explain dynamic programming with examples", "relevant_indices": [1]},
+    {"query": "What is photosynthesis equation?", "relevant_indices": [20]},
+    {"query": "Describe Newton's laws of motion", "relevant_indices": [15]},
+    {"query": "How does DNA replication work?", "relevant_indices": [19]},
+    {"query": "Explain hash table collision resolution", "relevant_indices": [4]},
+    {"query": "What is Bayes theorem?", "relevant_indices": [12]},
+    {"query": "Describe the French Revolution", "relevant_indices": [26]},
+    {"query": "What is quantum entanglement?", "relevant_indices": [17]},
+    {"query": "Explain object oriented programming pillars", "relevant_indices": [6]},
+    {"query": "What is the heap data structure?", "relevant_indices": [27]},
+    {"query": "Explain chemical bonding types", "relevant_indices": [23]},
+    {"query": "How does the immune system work?", "relevant_indices": [22]},
+    {"query": "Shortest path algorithm in graphs", "relevant_indices": [5]},
+]
+
+
+def generate_dataset(size_label: str, num_texts: int, output_dir: str):
+    """Generate a test dataset JSON file with the specified number of texts."""
+    # Use corpus items, repeating and shuffling if we need more than the corpus
+    texts = []
+    indices_map = {}
+    for i in range(num_texts):
+        src_idx = i % len(CORPUS)
+        # For repeated items, slightly modify to create variation
+        if i < len(CORPUS):
+            texts.append(CORPUS[src_idx])
+            indices_map[i] = src_idx
+        else:
+            prefix = f"[Passage {i+1}] "
+            texts.append(prefix + CORPUS[src_idx])
+            indices_map[i] = src_idx
+
+    # Adjust queries: only keep queries whose relevant texts are in this dataset
+    queries = []
+    for q in SEARCH_QUERIES:
+        if all(idx < num_texts for idx in q["relevant_indices"]):
+            queries.append(q)
+
+    dataset = {
+        "name": f"{size_label} Dataset ({num_texts} passages)",
+        "size": num_texts,
+        "texts": texts,
+        "queries": queries,
+    }
+
+    filepath = os.path.join(output_dir, f"dataset_{size_label}.json")
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(dataset, f, indent=2, ensure_ascii=False)
+    print(f"  ✅ Created {filepath} — {num_texts} texts, {len(queries)} queries")
+    return filepath
+
+
+def main():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = script_dir  # tests/ folder
+
+    print("=" * 60)
+    print("Test Data Generator")
+    print("=" * 60)
+
+    sizes = {
+        "small":  10,
+        "medium": 30,
+        "large":  100,
+        "xlarge": 500,
+    }
+
+    for label, count in sizes.items():
+        generate_dataset(label, count, output_dir)
+
+    print(f"\n✅ All datasets generated in: {output_dir}")
+
+
+if __name__ == "__main__":
+    main()

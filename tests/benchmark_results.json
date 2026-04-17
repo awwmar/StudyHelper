@@ -1,0 +1,197 @@
+{
+  "test1": {
+    "test": "Flat L2 vs HNSW",
+    "results": [
+      {
+        "dataset": "small Dataset (10 passages)",
+        "n": 10,
+        "flat_avg_ms": 0.1174,
+        "hnsw_avg_ms": 0.0896,
+        "speedup": 1.31,
+        "hnsw_recall_pct": 100.0,
+        "flat_semantic_acc": 100.0,
+        "hnsw_semantic_acc": 100.0,
+        "hnsw_build_time_s": 0.001
+      },
+      {
+        "dataset": "medium Dataset (30 passages)",
+        "n": 30,
+        "flat_avg_ms": 0.0067,
+        "hnsw_avg_ms": 0.0105,
+        "speedup": 0.64,
+        "hnsw_recall_pct": 100.0,
+        "flat_semantic_acc": 100.0,
+        "hnsw_semantic_acc": 100.0,
+        "hnsw_build_time_s": 0.0
+      },
+      {
+        "dataset": "large Dataset (100 passages)",
+        "n": 100,
+        "flat_avg_ms": 0.0136,
+        "hnsw_avg_ms": 0.0386,
+        "speedup": 0.35,
+        "hnsw_recall_pct": 100.0,
+        "flat_semantic_acc": 46.7,
+        "hnsw_semantic_acc": 46.7,
+        "hnsw_build_time_s": 0.003
+      },
+      {
+        "dataset": "xlarge Dataset (500 passages)",
+        "n": 500,
+        "flat_avg_ms": 0.0565,
+        "hnsw_avg_ms": 0.0754,
+        "speedup": 0.75,
+        "hnsw_recall_pct": 100.0,
+        "flat_semantic_acc": 46.7,
+        "hnsw_semantic_acc": 46.7,
+        "hnsw_build_time_s": 0.012
+      }
+    ]
+  },
+  "test2": {
+    "test": "Chunk Size Variations",
+    "results": [
+      {
+        "chunk_size": 500,
+        "overlap": 50,
+        "num_chunks": 30,
+        "embed_time_s": 2.711,
+        "avg_search_ms": 0.0121,
+        "avg_chunk_len": 387.0
+      },
+      {
+        "chunk_size": 1000,
+        "overlap": 100,
+        "num_chunks": 15,
+        "embed_time_s": 2.366,
+        "avg_search_ms": 0.0099,
+        "avg_chunk_len": 776.0
+      },
+      {
+        "chunk_size": 1500,
+        "overlap": 150,
+        "num_chunks": 10,
+        "embed_time_s": 3.015,
+        "avg_search_ms": 0.0085,
+        "avg_chunk_len": 1165.0
+      },
+      {
+        "chunk_size": 2000,
+        "overlap": 200,
+        "num_chunks": 7,
+        "embed_time_s": 2.333,
+        "avg_search_ms": 0.0079,
+        "avg_chunk_len": 1665.0
+      }
+    ]
+  },
+  "test3": {
+    "test": "Embedding Model Comparison",
+    "results": [
+      {
+        "model": "all-MiniLM-L6-v2",
+        "dimension": 384,
+        "load_time_s": 5.79,
+        "encode_time_s": 0.42,
+        "avg_search_ms": 0.0131,
+        "semantic_accuracy_pct": 100.0
+      },
+      {
+        "model": "all-mpnet-base-v2",
+        "dimension": 768,
+        "load_time_s": 5.49,
+        "encode_time_s": 2.409,
+        "avg_search_ms": 0.0139,
+        "semantic_accuracy_pct": 100.0
+      }
+    ]
+  },
+  "test4": {
+    "test": "HNSW Parameter Tuning",
+    "results": [
+      {
+        "config": "M=16 efC=100 efS=64",
+        "M": 16,
+        "efConstruction": 100,
+        "efSearch": 64,
+        "build_time_s": 0.002,
+        "avg_search_ms": 0.0229,
+        "recall_at_5_pct": 100.0,
+        "is_current": false
+      },
+      {
+        "config": "M=16 efC=200 efS=128",
+        "M": 16,
+        "efConstruction": 200,
+        "efSearch": 128,
+        "build_time_s": 0.002,
+        "avg_search_ms": 0.0233,
+        "recall_at_5_pct": 100.0,
+        "is_current": false
+      },
+      {
+        "config": "M=32 efC=200 efS=128",
+        "M": 32,
+        "efConstruction": 200,
+        "efSearch": 128,
+        "build_time_s": 0.003,
+        "avg_search_ms": 0.0286,
+        "recall_at_5_pct": 100.0,
+        "is_current": true
+      },
+      {
+        "config": "M=32 efC=400 efS=256",
+        "M": 32,
+        "efConstruction": 400,
+        "efSearch": 256,
+        "build_time_s": 0.003,
+        "avg_search_ms": 0.0292,
+        "recall_at_5_pct": 100.0,
+        "is_current": false
+      },
+      {
+        "config": "M=64 efC=200 efS=128",
+        "M": 64,
+        "efConstruction": 200,
+        "efSearch": 128,
+        "build_time_s": 0.002,
+        "avg_search_ms": 0.0465,
+        "recall_at_5_pct": 100.0,
+        "is_current": false
+      },
+      {
+        "config": "M=64 efC=400 efS=256",
+        "M": 64,
+        "efConstruction": 400,
+        "efSearch": 256,
+        "build_time_s": 0.002,
+        "avg_search_ms": 0.0429,
+        "recall_at_5_pct": 100.0,
+        "is_current": false
+      }
+    ]
+  },
+  "test5": {
+    "test": "Batch vs Single Embedding",
+    "results": [
+      {
+        "batch_size": 10,
+        "single_time_s": 0.823,
+        "batch_time_s": 0.818,
+        "speedup": 1.01
+      },
+      {
+        "batch_size": 30,
+        "single_time_s": 2.698,
+        "batch_time_s": 2.574,
+        "speedup": 1.05
+      },
+      {
+        "batch_size": 100,
+        "single_time_s": 9.767,
+        "batch_time_s": 8.681,
+        "speedup": 1.13
+      }
+    ]
+  }
+}
