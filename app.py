@@ -5,6 +5,7 @@ import json
 import random
 import string
 from functools import wraps
+from utils.validation import parse_question_count
 from flask import Flask, render_template, request, jsonify, send_file, session, redirect, url_for
 from dotenv import load_dotenv
 from supabase import create_client, Client
@@ -321,7 +322,10 @@ def generate_questions():
         
         topics = data.get('topics', [])
         q_type = data.get('question_type', 'conceptual')
-        num_questions = data.get('num_questions', 5)
+        try:
+            num_questions = parse_question_count(data.get('num_questions', 5))
+        except ValueError as exc:
+            return jsonify({'success': False, 'error': str(exc)}), 400
 
         # Instruction
         type_instruction = ""
@@ -368,7 +372,10 @@ def generate_test():
         # book_name = data.get('book_name')
         topics = data.get('topics', [])
         difficulty = data.get('difficulty', 'Medium')
-        num_questions = int(data.get('num_questions', 5))
+        try:
+            num_questions = parse_question_count(data.get('num_questions', 5))
+        except ValueError as exc:
+            return jsonify({'success': False, 'error': str(exc)}), 400
         question_type = data.get('question_type', 'mixed') 
         
         # Question Types
