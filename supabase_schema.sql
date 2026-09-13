@@ -71,3 +71,22 @@ create table if not exists knowledge_graph_edges (
 -- ALTER TABLE test_questions ADD COLUMN IF NOT EXISTS rouge1 float;
 -- ALTER TABLE test_questions ADD COLUMN IF NOT EXISTS rouge2 float;
 -- ALTER TABLE test_questions ADD COLUMN IF NOT EXISTS rougeL float;
+
+-- 8. Agent Cache (For System 2)
+create table if not exists agent_cache (
+  id uuid primary key default uuid_generate_v4(),
+  cache_key text unique not null,
+  response_json jsonb not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 9. Learner Profiles (For Adaptive Modeling)
+create table if not exists learner_profiles (
+  id uuid primary key default uuid_generate_v4(),
+  user_id text not null,
+  topic text not null,
+  mastery_score float default 0.5,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique (user_id, topic)
+);

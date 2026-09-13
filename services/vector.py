@@ -19,8 +19,10 @@ HNSW_EF_SEARCH = 128        # Search-time quality (higher = better recall, slowe
 
 
 class VectorService:
-    def __init__(self, index_path="index.faiss"):
-        self.index_path = index_path
+    def __init__(self, index_path=None):
+        data_dir = os.getenv("APP_DATA_DIR", ".")
+        os.makedirs(data_dir, exist_ok=True)
+        self.index_path = index_path or os.path.join(data_dir, "index.faiss")
         logger.info(f"Loading embedding model: {EMBEDDING_MODEL}")
         self.encoder = SentenceTransformer(EMBEDDING_MODEL)
         self.dimension = EMBEDDING_DIMENSION
@@ -28,7 +30,7 @@ class VectorService:
         self.bm25_corpus = []
         self.bm25_chunk_ids = []
         self.bm25_index = None
-        self.bm25_path = "bm25_index.pkl"
+        self.bm25_path = os.path.join(data_dir, "bm25_index.pkl")
         self._load_bm25()
 
     def _load_bm25(self):

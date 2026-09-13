@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 echo Starting Study Assistant...
 echo Activating Virtual Environment...
 call venv\Scripts\activate
@@ -9,11 +10,13 @@ if %errorlevel% neq 0 (
 )
 
 echo Checking dependencies...
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 if %errorlevel% neq 0 (
-    echo Warning: Failed to verify dependencies.
+    echo Failed to install dependencies.
+    pause
+    exit /b 1
 )
 
 echo Starting Flask App...
-python App.py
+python -m flask --app app run --host 127.0.0.1 --port 5000
 pause

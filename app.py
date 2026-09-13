@@ -19,6 +19,7 @@ from services.vector import vector_service
 from services.llm import llm_service
 from services.selector import selector_agent
 from agents.system2_query import system2
+from agents.feedback_agent import feedback_agent
 from services.db import DBService
 from reportlab.pdfgen import canvas
 
@@ -26,7 +27,11 @@ from reportlab.pdfgen import canvas
 app = Flask(__name__)
 
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret-key-123")
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getenv("APP_DATA_DIR", "."), 'uploads')
+app.config['SESSION_COOKIE_SECURE'] = os.getenv("SESSION_COOKIE_SECURE") == "1"
+if os.getenv("TRUST_PROXY") == "1":
+    from werkzeug.middleware.proxy_fix import ProxyFix
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # --- OAuth Setup ---
@@ -326,15 +331,30 @@ def generate_questions():
             type_instruction = f"Generate {q_type} questions."
 
         # System 2 Orchestrator Pipeline
-        questions_list = system2.generate_quiz(
+        user_id = session.get("user_id", "default")
+        raw_questions_list = system2.generate_quiz(
             topics=topics,
             difficulty="Medium", 
             num_questions=num_questions,
             q_type=q_type,
-            type_instruction=type_instruction
+            type_instruction=type_instruction,
+            user_id=user_id
         )
         
-        response_content = "\n\n".join(questions_list)
+        formatted_questions = []
+        for q in raw_questions_list:
+            if isinstance(q, dict):
+                text = q.get('question', '')
+                if 'distractors' in q:
+                    import random
+                    opts = q['distractors'] + [q.get('correct', '')]
+                    random.shuffle(opts)
+                    text += "\n" + "\n".join([f"- {opt}" for opt in opts])
+                formatted_questions.append(text)
+            else:
+                formatted_questions.append(str(q))
+
+        response_content = "\n\n".join(formatted_questions)
         return jsonify({'questions': response_content})
     except Exception as e:
         print(f"Error in generate_questions: {e}")
@@ -370,33 +390,63 @@ def generate_test():
             type_instruction = "Generate a mix of question types."
 
         # System 2 Orchestrator Pipeline
-        questions_list = system2.generate_quiz(
+        user_id = session.get("user_id", "default")
+        raw_questions_list = system2.generate_quiz(
             topics=topics,
             difficulty=difficulty,
             num_questions=num_questions,
             q_type=question_type,
-            type_instruction=type_instruction
+            type_instruction=type_instruction,
+            user_id=user_id
         )
+
+        formatted_questions = []
+        for q in raw_questions_list:
+            if isinstance(q, dict):
+                text = q.get('question', '')
+                if 'distractors' in q:
+                    import random
+                    opts = q['distractors'] + [q.get('correct', '')]
+                    random.shuffle(opts)
+                    text += "\n" + "\n".join([f"- {opt}" for opt in opts])
+                formatted_questions.append(text)
+            else:
+                formatted_questions.append(str(q))
 
         save_db = data.get('save', True)
         test_id = None
         
         if save_db:
-            user_id = session.get("user_id")
             test_record = supabase.table("tests").insert({
                 "user_id": user_id,
                 "book_name": data.get('book_name', 'Mixed'),
                 "difficulty": difficulty,
-                "total_questions": len(questions_list),
+                "total_questions": len(formatted_questions),
                 "score": 0 
             }).execute()
             test_id = test_record.data[0]['id']
 
-        return jsonify({'success': True, 'questions': questions_list, 'test_id': test_id})
+        return jsonify({'success': True, 'questions': formatted_questions, 'test_id': test_id})
 
     except Exception as e:
         print(f"Error in generate_test: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/socratic-hint', methods=['POST'])
+@login_required
+def get_socratic_hint():
+    data = request.json
+    question = data.get('question')
+    student_attempt = data.get('student_attempt')
+    topics = data.get('topics', [])
+
+    # Retrieve contextual chunks quickly to feed the tutor
+    query = f"Help with {question}"
+    chunks = system2.retriever_agent.retrieve(query, topics, top_k=5)
+    context = "\n".join([c['text_content'] for c in chunks])
+
+    hint = feedback_agent.generate_socratic_hint(context, question, student_attempt)
+    return jsonify({'success': True, 'hint': hint})
 
 @app.route('/start-assignment', methods=['POST'])
 @login_required

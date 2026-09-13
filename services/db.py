@@ -290,3 +290,48 @@ class DBService:
         except Exception as e:
             logger.error(f"Error fetching KG related chunks: {e}")
             return []
+
+    @staticmethod
+    def get_agent_cache(cache_key: str) -> Optional[Any]:
+        try:
+            res = supabase.table("agent_cache").select("response_json").eq("cache_key", cache_key).execute()
+            if res.data:
+                return res.data[0]["response_json"]
+            return None
+        except Exception as e:
+            logger.error(f"Error getting agent cache: {e}")
+            return None
+
+    @staticmethod
+    def set_agent_cache(cache_key: str, response_json: Any):
+        try:
+            supabase.table("agent_cache").upsert({
+                "cache_key": cache_key,
+                "response_json": response_json
+            }, on_conflict="cache_key").execute()
+        except Exception as e:
+            logger.error(f"Error setting agent cache: {e}")
+
+    @staticmethod
+    def get_learner_profile(user_id: str, topic: str) -> float:
+        """Returns the mastery score for a user's topic. Defaults to 0.5."""
+        try:
+            res = supabase.table("learner_profiles").select("mastery_score").eq("user_id", user_id).eq("topic", topic).execute()
+            if res.data:
+                return float(res.data[0]["mastery_score"])
+            return 0.5
+        except Exception as e:
+            logger.error(f"Error getting learner profile: {e}")
+            return 0.5
+
+    @staticmethod
+    def update_learner_profile(user_id: str, topic: str, mastery_score: float):
+        try:
+            supabase.table("learner_profiles").upsert({
+                "user_id": user_id,
+                "topic": topic,
+                "mastery_score": mastery_score,
+                "updated_at": "now()"
+            }, on_conflict="user_id,topic").execute()
+        except Exception as e:
+            logger.error(f"Error updating learner profile: {e}")

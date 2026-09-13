@@ -15,17 +15,24 @@ class LLMService:
         if not api_key:
             raise ValueError("GROQ_API_KEY not found in env")
             
+        self.model_name = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b").strip()
+        self.fallback_model_name = os.getenv("GROQ_FALLBACK_MODEL", "openai/gpt-oss-120b").strip()
+        if not self.model_name or not self.fallback_model_name:
+            raise ValueError("GROQ_MODEL and GROQ_FALLBACK_MODEL must not be empty")
         self.llm = ChatGroq(
             temperature=0.3, # Lower temperature for reasoning/extraction
-            model_name="llama-3.1-8b-instant",
+            model_name=self.model_name,
             groq_api_key=api_key,
-            max_retries=1
+            max_retries=1,
+            timeout=60
         )
         # Fallback model
         self.fallback_llm = ChatGroq(
             temperature=0.3,
-            model_name="llama-3.1-8b-instant",
-            groq_api_key=api_key
+            model_name=self.fallback_model_name,
+            groq_api_key=api_key,
+            max_retries=1,
+            timeout=60
         )
 
     def extract_metadata(self, text_chunk: str):
@@ -220,12 +227,22 @@ Act like a strict but fair professor: Reward correctness and valid reasoning, ac
             response = self.fallback_llm.invoke(prompt).content
             return response.replace("```json", "").replace("```", "").strip()
 
-    def invoke_custom(self, prompt: str) -> str:
-        """Generic method for custom prompts (used by eval_metrics, etc.)."""
+    def invoke_custom(self, prompt: str, model_id: str = None) -> str:
+        """Generic method for custom prompts. Supports optional model override."""
         try:
-            return self.llm.invoke(prompt).content
+            target_llm = self.llm
+            if model_id and model_id != self.model_name:
+                # Create a temporary instance for the specific model
+                target_llm = ChatGroq(
+                    temperature=0.3,
+                    model_name=model_id,
+                    groq_api_key=os.getenv("GROQ_API_KEY"),
+                    max_retries=1,
+                    timeout=60
+                )
+            return target_llm.invoke(prompt).content
         except Exception as e:
-            logger.warning(f"LLM invoke failed (Primary): {e}. Trying fallback.")
+            logger.warning(f"LLM invoke failed: {e}. Trying fallback.")
             return self.fallback_llm.invoke(prompt).content
 
     def evaluate_batch(self, items: list, max_workers: int = 5) -> list:

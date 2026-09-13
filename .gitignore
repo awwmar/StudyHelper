@@ -2,6 +2,8 @@
 
 #.env should NEVER be uploaded
 .env
+.env.*
+!.env.example
 
 # Environments
 venv/
@@ -27,6 +29,11 @@ verification.log
 index.faiss*
 vector_db/
 uploads/
+bm25_index.pkl
+models/
+data/
+results/
+.cph/
 
 # Large binaries / Test Data
 *.pdf

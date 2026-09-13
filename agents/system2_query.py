@@ -2,12 +2,18 @@ import json
 import logging
 import re
 from services.vector import vector_service
-from services.selector import selector_agent  # Using the existing cross-encoder
+from services.selector import selector_agent
 from services.llm import llm_service
 from services.db import DBService
 from config import config
 from services.knowledge_graph import knowledge_graph_service
 import concurrent.futures
+
+# Import new agents
+from agents.caching_agent import caching_agent
+from agents.profiling_agent import profiling_agent
+from agents.distractor_agent import distractor_agent
+from agents.prompt_agent import prompt_optimization_agent
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +21,6 @@ class RetrieverAgent:
     """Agent 1: Searches vector DB and retrieves top relevant chunks."""
     def retrieve(self, query: str, topics: list = None, top_k: int = 30) -> list:
         logger.info("RetrieverAgent: Searching Vector DB for context...")
-        
         chunks = []
         if config.ENABLE_HYBRID_SEARCH:
             with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -49,7 +54,6 @@ class RetrieverAgent:
         else:
             chunks = vector_service.search(query, k=top_k)
         
-        # Topic Boost
         if topics:
             topic_chunks = []
             for t in topics:
@@ -57,14 +61,12 @@ class RetrieverAgent:
                 topic_chunks.extend(c_list[:3])
             chunks.extend(topic_chunks)
             
-        # Knowledge Graph Boost
         if config.ENABLE_KNOWLEDGE_GRAPH:
             concepts = knowledge_graph_service.extract_query_concepts(query)
             if concepts:
                 kg_chunks = DBService.get_kg_related_chunks(concepts)
                 chunks.extend(kg_chunks)
             
-        # Deduplicate
         seen = set()
         unique_chunks = []
         for c in chunks:
@@ -78,7 +80,6 @@ class RetrieverAgent:
 class SelectorAgentProxy:
     """Agent 2: Filters irrelevant chunks, keeping top 50% useful chunks."""
     def __init__(self):
-        # We wrap the existing CrossEncoder selector
         self.selector = selector_agent
 
     def filter_chunks(self, query: str, chunks: list, top_ratio: float = 0.5) -> list:
@@ -92,6 +93,7 @@ class SelectorAgentProxy:
         logger.info(f"SelectorAgent: Filtering {len(chunks)} down to {int(len(chunks)*top_ratio)} chunks...")
         return self.selector.select(query, chunks, top_ratio=top_ratio, min_chunks=5)
 
+
 class ResponseAgent:
     """Agent 3: Calls LLM with cached context to generate answers/MCQ."""
     def draft_output(self, context: str, topics: list, difficulty: str, num_questions: int, type_instruction: str, feedback: str = "") -> str:
@@ -104,13 +106,18 @@ class ResponseAgent:
         {type_instruction}
         {feedback_prompt}
         
-        Return ONLY a valid JSON array of strings. Example: ["Question 1?", "Question 2?"]
-        Do not add numbering or markdown blocks.
+        Return ONLY a valid JSON array of objects. Format:
+        [
+            {{"question": "What is ...?", "correct": "The exact answer is ..."}},
+            {{"question": "How does ...?", "correct": "By doing ..."}}
+        ]
+        Do not add distractors yet. Do not add markdown code blocks like ```json.
         
         Context:
-        {context[:6000]}
+        {context[:8000]}
         """
         return llm_service.invoke_custom(prompt)
+
 
 class EvaluatorAgent:
     """Agent 4: Checks Exact Match, Faithfulness, and Hallucination metrics."""
@@ -120,13 +127,13 @@ class EvaluatorAgent:
         You are an expert Evaluator Agent.
         
         Original Context:
-        {context[:6000]}
+        {context[:8000]}
         
         Drafted Output:
         {drafted_content}
         
         Evaluate the drafted content:
-        1. JSON Format: Is it a valid JSON array of strings?
+        1. JSON Format: Is it a valid JSON array of objects with keys 'question' and 'correct'?
         2. Faithfulness/No Hallucinations: Can every single question be answered fully using only the 'Original Context'?
         
         Return your evaluation exactly as a JSON object:
@@ -142,6 +149,7 @@ class EvaluatorAgent:
         except Exception as e:
             return {"pass": False, "feedback": "JSON output malformed."}
 
+
 class System2Orchestrator:
     """Orchestrates System 2 Query Pipeline with caching mechanism."""
     def __init__(self):
@@ -149,65 +157,65 @@ class System2Orchestrator:
         self.selector_agent = SelectorAgentProxy()
         self.response_agent = ResponseAgent()
         self.evaluator_agent = EvaluatorAgent()
+        # Profiling, Caching, PromptOptimization, and Distractor imported directly.
         
-        # 🔁 Cache Mechanism
-        self.cache = {}
+    def generate_quiz(self, topics: list, difficulty: str, num_questions: int, q_type: str, type_instruction: str, user_id: str = "default") -> list:
+        # Cache Check Agent
+        cached = caching_agent.get_cache(topics, difficulty, num_questions, q_type)
+        if cached:
+            return cached
 
-    def _get_cache_key(self, topics, difficulty, num, q_type):
-        return f"{'-'.join(sorted(topics))}_{difficulty}_{num}_{q_type}"
-
-    def generate_quiz(self, topics: list, difficulty: str, num_questions: int, q_type: str, type_instruction: str) -> list:
-        cache_key = self._get_cache_key(topics, difficulty, num_questions, q_type)
-        
-        # Cache Check
-        if cache_key in self.cache:
-            logger.info("System 2 Cache Hit! Reusing previous quiz generation.")
-            return self.cache[cache_key]
+        # Profile Agent adjusts instructions
+        profile_instruction = profiling_agent.get_learner_context(user_id, topics)
+        enhanced_instruction = type_instruction + "\n" + profile_instruction
 
         query = f"Generate {difficulty} questions about {', '.join(topics)} of type {q_type}"
-        
-        # [Retriever Agent]
         chunks = self.retriever_agent.retrieve(query, topics)
-        
-        # [Selector Agent]
         selected_chunks = self.selector_agent.filter_chunks(query, chunks)
-        context = "\n\n".join([c['text_content'] for c in selected_chunks])
         
-        # [Response -> Evaluator Loop]
+        # Prompt Optimization Agent mitigates Lost-in-the-Middle
+        context = prompt_optimization_agent.format_context(selected_chunks)
+
         feedback = ""
         final_draft = ""
         max_retries = 3
+        questions_list = []
         
         for attempt in range(max_retries):
-            # [Response Agent]
-            drafted = self.response_agent.draft_output(context, topics, difficulty, num_questions, type_instruction, feedback)
+            drafted = self.response_agent.draft_output(context, topics, difficulty, num_questions, enhanced_instruction, feedback)
             final_draft = drafted
-            
-            # [Evaluator Agent]
             eval_result = self.evaluator_agent.evaluate(context, drafted)
             if eval_result.get("pass", False):
                 break
             else:
                 feedback = eval_result.get("feedback", "")
                 
-        # Parse final result
-        questions_list = []
+        # Parse exact answers
         try:
             cleaned = re.search(r'\[.*\]', final_draft, re.DOTALL)
             questions_list = json.loads(cleaned.group(0)) if cleaned else json.loads(final_draft)
-            questions_list = [str(q).strip() for q in questions_list if q]
         except:
-            questions_list = [line.strip() for line in final_draft.split('\n') if '?' in line]
+            questions_list = []
             
         if not questions_list:
-            questions_list = ["Error generating questions."]
+            questions_list = [{"question": "Error generating questions.", "correct": "System failure."}]
             
         questions_list = questions_list[:num_questions]
         
-        # Update Cache
-        self.cache[cache_key] = questions_list
+        # Distractor Agent fetches wrong answers
+        if q_type.lower() == "mcq" or "mcq" in type_instruction.lower():
+            final_quiz = distractor_agent.generate_distractors(context, questions_list)
+        else:
+            final_quiz = questions_list
+
+        caching_agent.store_cache(topics, difficulty, num_questions, q_type, final_quiz)
         logger.info("System 2 Complete: Output Cached.")
+        return final_quiz
         
-        return questions_list
+    def cache_check_only(self, query: str) -> bool:
+        """Simple helper for demo purposes to check if a generic query exists in cache."""
+        # For the demo, we'll just check if there's *any* cache entry for basic topics
+        # Real cache check is inside generate_quiz
+        return False # Default to miss for demo trace unless we want to be specific
 
 system2 = System2Orchestrator()
